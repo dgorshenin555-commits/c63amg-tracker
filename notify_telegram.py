@@ -54,8 +54,10 @@ def main():
         if not token:
             print("Add TELEGRAM_BOT_TOKEN as a GitHub Actions secret first.")
             return 1
-        req = urllib.request.Request(f"https://api.telegram.org/bot{token}/getUpdates",
-                                     headers={"Accept": "application/json"})
+        req = urllib.request.Request(
+            f"https://api.telegram.org/bot{token}/getUpdates",
+            headers={"Accept": "application/json"},
+        )
         try:
             with urllib.request.urlopen(req, timeout=15) as response:
                 data = json.load(response)
@@ -63,16 +65,36 @@ def main():
             chats = []
             for update in updates:
                 msg = update.get("message") or {}
-                if msg.get("chat", {}).get("type") == "private" and str(msg.get("text", "")).strip().startswith("/start"):
-                    chats.append(str(msg["chat"]["id"]))
+                chat = msg.get("chat") or {}
+                if chat.get("type") == "private" and chat.get("id") is not None:
+                    chats.append(str(chat["id"]))
+            chats = list(dict.fromkeys(chats[-5:]))
             if not chats:
-                print("No /start messages found. Open your bot in Telegram, tap Start, then try again.")
+                print("No private messages found. Message your own bot in Telegram, then run discover again.")
                 return 1
-            print("Found chat IDs for private /start messages: " + ", ".join(dict.fromkeys(chats[-10:])))
-            print("Set your chosen ID as GitHub Actions secret TELEGRAM_CHAT_ID.")
-            return 0
+            sent = 0
+            for cid in chats:
+                msg = ("✅ C63AMG Tracker: ваш Chat ID: " + cid +
+                       "\\nСоздайте GitHub Actions secret TELEGRAM_CHAT_ID с этим значением." +
+                       "\\nНе публикуйте ID в открытых журналах.")
+                payload = json.dumps({"chat_id": cid, "text": msg}).encode()
+                request = urllib.request.Request(
+                    f"https://api.telegram.org/bot{token}/sendMessage",
+                    data=payload,
+                    headers={"Content-Type": "application/json"},
+                    method="POST",
+                )
+                with urllib.request.urlopen(request, timeout=15) as response:
+                    result = json.load(response)
+                    if result.get("ok"):
+                        sent += 1
+            print(f"Sent Chat ID privately in Telegram to {sent} recent private chat(s).")
+            return 0 if sent else 1
         except urllib.error.HTTPError as exc:
             print(f"Telegram discovery error: HTTP {exc.code}.")
+            return 1
+        except Exception as exc:
+            print(f"Telegram discovery error: {type(exc).__name__}.")
             return 1
     if not token or not chat_id:
         print("Telegram is not configured: add TELEGRAM_BOT_TOKEN and TELEGRAM_CHAT_ID in GitHub Actions secrets.")
