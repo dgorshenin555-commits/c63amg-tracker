@@ -1,5 +1,6 @@
 import json, os, time, urllib.request, urllib.parse, pathlib, hashlib, html
 from datetime import datetime,timezone
+from valuation import update_portfolio
 WALLET=os.environ.get("SOURCE_WALLET","0xb31e41965df4ab8014de4c4d8da9deff0a6ac120").lower()
 P=pathlib.Path("state.json")
 NOW=int(time.time())
@@ -121,10 +122,11 @@ def run():
    alerts.append(apply(s,t))
   s["seen"]=list(dict.fromkeys((s["seen"]+[k for k,t in newly])))[-3500:]
  s["new_detected"]=len(newly)
+ settlements=update_portfolio(s,fetch,book,NOW)
  s["updated"]=NOW
- pathlib.Path(".alerts.json").write_text(json.dumps({"generated_at":NOW,"events":alerts},ensure_ascii=False))
+ pathlib.Path(".alerts.json").write_text(json.dumps({"generated_at":NOW,"events":alerts,"settlements":settlements},ensure_ascii=False))
  P.write_text(json.dumps(s,ensure_ascii=False,indent=2))
  pathlib.Path("site").mkdir(exist_ok=True)
  pathlib.Path("site/state.json").write_text(json.dumps(s,ensure_ascii=False))
- print("Copied:",s["copied"],"Skipped:",s["skipped"],"Updated:",NOW)
+ print("Copied:",s["copied"],"Skipped:",s["skipped"],"New settlements:",len(settlements),"Equity:",round(s["equity"],2),"Updated:",NOW)
 if __name__=="__main__":run()
