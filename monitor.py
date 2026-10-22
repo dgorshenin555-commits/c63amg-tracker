@@ -88,8 +88,15 @@ def apply(s,t):
  return e
 def run():
  s=json.loads(P.read_text()) if P.exists() else init()
- rows=trades(s.get("updated",s.get("started",NOW))); seen=set(s["seen"]); newly=[]; alerts=[]
+ # Polymarket activity may be indexed late; use a rolling overlap and dedupe by fill key.
+ # Catch up after GitHub schedule delays instead of advancing the API window blindly.
+ previous=int(s.get("updated",s.get("started",NOW)))
+ lookback=max(1,min(previous-7200,NOW-21600))
+ rows=trades(lookback); seen=set(s["seen"]); newly=[]; alerts=[]
+ s["poll_from_ts"]=lookback
  s["feed_version"]="v2_activity"
+ s["polling_gap_s"]=max(0,NOW-previous)
+ s["feed_status"]="live"
  s["feed_rows"]=len(rows)
  s["feed_latest_ts"]=max((int(t.get("timestamp",0)) for t in rows),default=0)
  # One lightweight 24h feed diagnostic to distinguish no fresh fills from a broken source.
@@ -103,13 +110,17 @@ def run():
  print("v2 source recent rows:",len(rows),"recent latest:",s["feed_latest_ts"],"24h sample:",len(sample),"sample latest:",s["source_latest_known_ts"])
  for t in rows:
   k=key(t)
-  if k not in seen:newly.append((k,t))
+  # Trades before our paper experiment began are history, not new signals.
+  ts=int(t.get("timestamp") or 0)
+  if k not in seen and ts>=int(s["started"])-10:
+   newly.append((k,t))
  if not P.exists():
   s["seen"]=[key(t) for t in rows];s["events"]=[] # No historical trades on first run
  elif NOW<s["end"]:
   for k,t in newly:
    alerts.append(apply(s,t))
   s["seen"]=list(dict.fromkeys((s["seen"]+[k for k,t in newly])))[-3500:]
+ s["new_detected"]=len(newly)
  s["updated"]=NOW
  pathlib.Path(".alerts.json").write_text(json.dumps({"generated_at":NOW,"events":alerts},ensure_ascii=False))
  P.write_text(json.dumps(s,ensure_ascii=False,indent=2))
