@@ -8,7 +8,7 @@ import urllib.request
 from datetime import datetime, timezone
 
 ALERTS_PATH = pathlib.Path(".alerts.json")
-SITE_URL = "https://dgorshenin555-commits.github.io/c63amg-tracker/"
+SITE_URL = os.environ.get("TRACKER_SITE_URL", "https://dgorshenin555-commits.github.io/c63amg-tracker/dashboard/")
 
 def utc_time(epoch):
     try:
