@@ -1,7 +1,7 @@
 {
   "started": 1792679836,
   "end": 1793284636,
-  "updated": 1792682756,
+  "updated": 1792682914,
   "cash": 1000.0,
   "realized": 0.0,
   "positions": {},
@@ -509,5 +509,8 @@
   ],
   "events": [],
   "copied": 0,
-  "skipped": 0
+  "skipped": 0,
+  "feed_version": "v2_activity",
+  "feed_rows": 0,
+  "feed_latest_ts": 0
 }
