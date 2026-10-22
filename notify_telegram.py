@@ -75,8 +75,8 @@ def main():
             sent = 0
             for cid in chats:
                 msg = ("✅ C63AMG Tracker: ваш Chat ID: " + cid +
-                       "\\nСоздайте GitHub Actions secret TELEGRAM_CHAT_ID с этим значением." +
-                       "\\nНе публикуйте ID в открытых журналах.")
+                       "\nСоздайте GitHub Actions secret TELEGRAM_CHAT_ID с этим значением." +
+                       "\nНе публикуйте ID в открытых журналах.")
                 payload = json.dumps({"chat_id": cid, "text": msg}).encode()
                 request = urllib.request.Request(
                     f"https://api.telegram.org/bot{token}/sendMessage",
