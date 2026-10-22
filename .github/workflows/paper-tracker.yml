@@ -1,0 +1,40 @@
+name: C63AMG Paper Tracker
+on:
+  schedule:
+    - cron: "2-59/5 * * * *"
+  workflow_dispatch:
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+concurrency:
+  group: c63amg-paper
+  cancel-in-progress: false
+jobs:
+  tracker:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Collect and simulate
+        run: python monitor.py
+      - name: Save virtual account
+        run: |
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config user.name "github-actions[bot]"
+          git add state.json
+          if ! git diff --cached --quiet; then
+            git commit -m "Paper-trading snapshot [skip ci]"
+            git push
+          fi
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+      - uses: actions/deploy-pages@v4
+        id: deployment
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
