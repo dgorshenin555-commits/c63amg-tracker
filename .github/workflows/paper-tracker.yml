@@ -6,6 +6,7 @@ on:
       - '.github/workflows/paper-tracker.yml'
       - 'monitor.py'
       - 'notify_telegram.py'
+      - 'site/index.html'
   schedule:
     - cron: "3-58/5 * * * *"
   workflow_dispatch:
