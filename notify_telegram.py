@@ -50,6 +50,30 @@ def build_message(events, mode):
 def main():
     token = os.environ.get("TELEGRAM_BOT_TOKEN", "").strip()
     chat_id = os.environ.get("TELEGRAM_CHAT_ID", "").strip()
+    if "--discover" in sys.argv:
+        if not token:
+            print("Add TELEGRAM_BOT_TOKEN as a GitHub Actions secret first.")
+            return 1
+        req = urllib.request.Request(f"https://api.telegram.org/bot{token}/getUpdates",
+                                     headers={"Accept": "application/json"})
+        try:
+            with urllib.request.urlopen(req, timeout=15) as response:
+                data = json.load(response)
+            updates = data.get("result", [])
+            chats = []
+            for update in updates:
+                msg = update.get("message") or {}
+                if msg.get("chat", {}).get("type") == "private" and str(msg.get("text", "")).strip().startswith("/start"):
+                    chats.append(str(msg["chat"]["id"]))
+            if not chats:
+                print("No /start messages found. Open your bot in Telegram, tap Start, then try again.")
+                return 1
+            print("Found chat IDs for private /start messages: " + ", ".join(dict.fromkeys(chats[-10:])))
+            print("Set your chosen ID as GitHub Actions secret TELEGRAM_CHAT_ID.")
+            return 0
+        except urllib.error.HTTPError as exc:
+            print(f"Telegram discovery error: HTTP {exc.code}.")
+            return 1
     if not token or not chat_id:
         print("Telegram is not configured: add TELEGRAM_BOT_TOKEN and TELEGRAM_CHAT_ID in GitHub Actions secrets.")
         return 0
