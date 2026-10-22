@@ -24,8 +24,13 @@ The bot **never places real trades**. Notifications are delivered only after pub
 5. On the GitHub Actions secrets page, create `TELEGRAM_CHAT_ID` with that ID.
 6. Run the workflow again with `telegram_action = test`. You should receive a test Telegram message. A run may take a few minutes to start.
 
-**Default:** one consolidated Telegram alert per polling run *only when paper trades have actually been copied*. Skipped trades do not produce notifications.
+**Default:** one consolidated Telegram alert whenever the current API v2 reveals new wallet activity. The message contains both copied and skipped trades with reasons (up to 12 detailed lines per report). This does not re-send trades that occurred before the repaired feed was enabled.
 
-To also receive alerts about new observed C63AMG trades that were **not** copied, create a repository **Actions variable** named `TELEGRAM_NOTIFY_MODE` with value `all`. The default is `copied`. Avoid `all` if the trader is very active: it can be noisy.
+To notify **only** about paper-copied trades, set the repository Actions variable `TELEGRAM_NOTIFY_MODE` to `copied`. The current default is `all`. Both modes are simulated and do not place real orders.
 
 If either Telegram secret is missing, the notification step skips delivery without affecting the monitoring or dashboard. Telegram errors are shown in Actions logs but do not fail the paper-trading job. No historical alerts will be sent retroactively.
+
+
+## Feed reliability
+
+The tracker uses **Polymarket Data API v2 /v2/activity**, including maker-side fills. It stores `feed_latest_ts` and diagnostic `source_latest_known_ts` to expose source freshness. It deliberately skips virtual copying when signals are stale or the price has moved. GitHub Actions schedule is **best-effort**, not a 5-minute service guarantee; cron jobs may be delayed or skipped. An always-on VPS or external scheduling provider is required to get reliable low-latency alerts.
