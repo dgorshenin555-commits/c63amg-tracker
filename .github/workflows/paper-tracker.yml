@@ -7,6 +7,7 @@ on:
       - 'monitor.py'
       - 'notify_telegram.py'
       - 'site/index.html'
+      - 'site/dashboard/index.html'
   schedule:
     - cron: "4-59/5 * * * *"
   workflow_dispatch:
