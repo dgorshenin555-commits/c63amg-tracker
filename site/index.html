@@ -1,1 +1,90 @@
-<!doctype html><html lang="ru"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="refresh" content="300"><title>C63AMG · Paper Tracker</title><style>body{font-family:system-ui,sans-serif;background:#f4f6f8;color:#151d2b;max-width:1080px;margin:35px auto;padding:0 20px}h1{font-size:27px}.muted{color:#637185}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(175px,1fr));gap:12px}.box{border-radius:16px;background:white;padding:22px;border:1px solid #e1e5eb}.value{font-size:25px;font-weight:700;margin-top:10px}table{border-collapse:collapse;min-width:760px;width:100%;font-size:13px}td,th{text-align:left;padding:11px;border-bottom:1px solid #e5e8ed}th{color:#556173}.scroll{overflow-x:auto}.tag{font-size:12px;background:#e3f1e8;padding:5px 10px;border-radius:10px}.warn{padding:12px;background:#fff4d6;border-radius:12px;margin:20px 0}</style></head><body><h1>C63AMG <span class="tag">VIRTUAL ONLY</span></h1><p class="muted" id="status">Чтение последнего опубликованного отчёта…</p><div id="poll-health" class="warn">Проверяем актуальность мониторинга…</div><div class="warn">Виртуальное копирование уже исполненных сделок. GitHub Actions запускается примерно каждые 5 минут, возможны задержки и пропуски. Доходность не гарантирована; реальных заявок нет.</div><div class="grid" id="cards"></div><h2>Открытые виртуальные позиции</h2><div class="box scroll"><table><thead><tr><th>Событие</th><th>Исход</th><th>Доли</th><th>Себестоимость</th></tr></thead><tbody id="positions"></tbody></table></div><h2>Обнаруженные сделки C63AMG</h2><p class="muted">Обнаружение сделки не означает её копирование. В виртуальном портфеле появляются только сделки со статусом «Скопировано».</p><div class="box scroll"><table><thead><tr><th>Обнаружено</th><th>Сделка C63AMG</th><th>Статус</th><th>Объяснение</th><th>Цена C63AMG</th></tr></thead><tbody id="events"></tbody></table></div><p class="muted">Снимок обновляется при успешном запуске GitHub Actions. Оценка открытых позиций по рынку в этой версии не рассчитывается; PnL ниже — только реализованный.</p><script>const el=(id)=>document.getElementById(id);const esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));const money=x=>'$'+Number(x||0).toFixed(2);const dt=x=>x?new Date(x*1000).toLocaleString('ru-RU',{timeZone:'Europe/Moscow'}):'—';fetch('./state.json?'+Date.now()).then(r=>{if(!r.ok)throw Error('HTTP '+r.status);return r.json()}).then(s=>{el('status').textContent='Последний опрос: '+dt(s.updated)+' МСК · Период: '+dt(s.started)+' — '+dt(s.end)+' МСК';const age=Math.max(0,Math.round(Date.now()/1000-Number(s.updated||0)));el('poll-health').textContent=age>900?'⚠️ Мониторинг не обновлялся '+Math.floor(age/60)+' мин. Проверки GitHub Actions могут задерживаться.':'✅ Данные обновлены '+Math.floor(age/60)+' мин назад';let items=[['Свободные виртуальные средства',money(s.cash)],['Реализованный результат',money(s.realized)],['Виртуально скопировано',s.copied],['Обнаружено, но пропущено',s.skipped],['Открытых позиций',Object.values(s.positions).filter(p=>p.qty>0).length],['Начальный баланс','$1,000.00']];el('cards').innerHTML=items.map(i=>'<div class="box"><div class="muted">'+esc(i[0])+'</div><div class="value">'+esc(i[1])+'</div></div>').join('');let p=Object.values(s.positions).filter(p=>p.qty>0);el('positions').innerHTML=p.map(x=>'<tr><td>'+esc(x.title)+'</td><td>'+esc(x.outcome)+'</td><td>'+Number(x.qty).toFixed(2)+'</td><td>'+money(x.cost)+'</td></tr>').join('')||'<tr><td colspan="4">Пока нет позиций</td></tr>';const why={late_or_invalid:'Поздно обнаружена: старше 7 минут',price_moved:'Цена изменилась',no_inventory:'Нет долей для виртуальной продажи',risk_limit:'Превышен лимит риска',price_filter:'Цена вне разрешённого диапазона',no_depth:'Нет заявок в стакане',bad_signal:'Некорректный сигнал'};const explain=r=>why[r]||((r||'').startsWith('orderbook_error:')?'Ошибка получения котировок':r||'—');el('events').innerHTML=s.events.slice(-60).reverse().map(x=>'<tr><td>'+dt(x.detected)+'</td><td>'+esc(x.side==='BUY'?'Покупка · ':'Продажа · ')+esc(x.market)+' — '+esc(x.outcome)+'</td><td><strong>'+(x.decision==='COPIED'?'✅ Скопировано':'⏭ Пропущено')+'</strong></td><td>'+esc(explain(x.reason))+'</td><td>'+Number(x.price).toFixed(3)+'</td></tr>').join('')||'<tr><td colspan="5">Ожидание новых сделок</td></tr>'}).catch(e=>el('status').textContent='Снимок ещё не опубликован: '+e.message)</script></body></html>
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="refresh" content="300">
+<title>C63AMG — Виртуальный портфель</title>
+<style>
+:root{--bg:#f4f6f8;--ink:#1b2632;--muted:#728093;--edge:#e3e8ef;--green:#11835b;--red:#c53c47}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+.wrap{max-width:1080px;margin:0 auto;padding:27px 17px 65px}h1{font-size:26px;letter-spacing:-.9px;margin:0 0 4px}h2{font-size:18px;letter-spacing:-.3px;margin:27px 0 12px}
+.small,.muted{color:var(--muted);font-size:13px}.eyebrow{font-size:11px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
+.top{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:20px}.pill{background:#e0eee8;color:#176343;border-radius:999px;padding:5px 11px;font-weight:700;font-size:12px}
+.cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}.card,.panel{background:white;border:1px solid var(--edge);border-radius:16px;box-shadow:0 2px 5px #23324805}
+.card{padding:17px 18px;min-width:0}.metric{font-size:27px;font-weight:750;letter-spacing:-.7px;margin:7px 0 3px;font-variant-numeric:tabular-nums}.card .small{line-height:1.2}
+.line{display:flex;gap:12px;justify-content:space-between;align-items:center;flex-wrap:wrap}.sectionmeta{color:var(--muted);font-size:12px;font-weight:400}
+.panel{overflow:hidden}.panel>.inside{padding:17px 18px}.scroll{overflow-x:auto}table{border-collapse:collapse;width:100%;min-width:680px;font-size:13px}th,td{text-align:left;border-bottom:1px solid var(--edge);padding:12px 15px;vertical-align:top}th{color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.045em}tr:last-child td{border-bottom:0}
+.status{padding:10px 14px;border-radius:12px;font-size:13px;background:#e9f3ed;color:#216d4c;margin-bottom:13px}.status.late{background:#fff0d9;color:#875b23}
+.positive{color:var(--green)}.negative{color:var(--red)}.hint{border-left:3px solid #dce4ec;padding-left:12px;margin:14px 0 6px;color:var(--muted);font-size:13px}
+.tag{display:inline-block;padding:3px 8px;border-radius:999px;background:#eff2f5;font-size:11px;font-weight:650}.tag.good{background:#e7f5ed;color:var(--green)}.tag.bad{background:#ffeef0;color:var(--red)}
+.empty{padding:24px 15px;color:var(--muted);text-align:center}footer{margin-top:24px;font-size:12px;color:var(--muted)}
+a{color:inherit}
+@media(max-width:760px){.cards{grid-template-columns:repeat(2,minmax(0,1fr))}.metric{font-size:22px}.card{padding:14px}.wrap{padding:18px 12px 55px}h1{font-size:24px}}
+</style>
+</head>
+<body><main class="wrap">
+  <div class="top"><div><h1>C63AMG · Результаты стратегии</h1><div class="muted">Виртуальный счёт $1 000 · Только симуляция, без реальных денег</div></div><span class="pill">PAPER TRADING</span></div>
+  <div id="freshness" class="status">Проверяем актуальность данных…</div>
+  <section id="cards" class="cards"></section>
+  <h2>Результаты завершённых событий <span class="sectionmeta" id="settled-count"></span></h2>
+  <div class="panel scroll"><table><thead><tr><th>Событие и исход</th><th>Результат</th><th>Вложено</th><th>Получено</th><th>Прибыль / убыток</th></tr></thead><tbody id="settlements"><tr><td colspan="5" class="empty">Пока нет официально рассчитанных событий</td></tr></tbody></table></div>
+  <h2>Открытые виртуальные позиции <span class="sectionmeta" id="positions-count"></span></h2>
+  <div class="panel scroll"><table><thead><tr><th>Событие и исход</th><th>Доли</th><th>Вложено</th><th>Оценка сейчас</th><th>Нереализованный P&L</th></tr></thead><tbody id="positions"><tr><td colspan="5" class="empty">Нет открытых позиций</td></tr></tbody></table></div>
+  <p class="hint">Текущая оценка открытых позиций рассчитывается по доступной цене продажи или ориентировочной цене Polymarket. Если котировка недоступна, используется себестоимость с предупреждением. Реальный результат фиксируется только после официального расчёта рынка.</p>
+  <h2>Новые сделки трейдера <span class="sectionmeta">копирование и причины пропусков</span></h2>
+  <div class="panel scroll"><table><thead><tr><th>Время обнаружения</th><th>Событие и исход</th><th>Наше действие</th><th>Причина</th><th>Цена C63AMG</th></tr></thead><tbody id="events"><tr><td colspan="5" class="empty">Ожидание новых сигналов</td></tr></tbody></table></div>
+  <footer id="meta">Загрузка последнего отчёта…</footer>
+</main>
+<script>
+(function(){
+const $=id=>document.getElementById(id);
+const escape=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const usd=n=>"$"+Number(n||0).toFixed(2);
+const signed=n=>(Number(n||0)>=0?"+":"−")+"$"+Math.abs(Number(n||0)).toFixed(2);
+const date=n=>n?new Date(Number(n)*1000).toLocaleString("ru-RU",{timeZone:"Europe/Moscow",day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"}):"—";
+const cls=n=>Number(n)>=0?"positive":"negative";
+const why={late_or_invalid:"Позднее обнаружение (>7 минут)",price_moved:"Цена изменилась",no_inventory:"Нет долей для продажи",risk_limit:"Лимит риска",price_filter:"Цена вне диапазона",no_depth:"Нет доступных заявок",bad_signal:"Некорректный сигнал"};
+const reason=s=>why[s]||((s||"").startsWith("orderbook_error:")?"Ошибка котировки":s||"—");
+function tile(title,value,sub,style){return '<div class="card"><div class="eyebrow">'+escape(title)+'</div><div class="metric '+(style||"")+'">'+escape(value)+'</div><div class="small">'+escape(sub)+'</div></div>';}
+fetch("state.json?t="+Date.now(),{cache:"no-store"}).then(r=>{if(!r.ok)throw Error("HTTP "+r.status);return r.json()}).then(s=>{
+ const secs=Math.max(0,Math.floor(Date.now()/1000-Number(s.updated||0)));
+ $("freshness").className="status"+(secs>900?" late":"");
+ $("freshness").textContent=(secs>900?"⚠️ Данные устарели: ":"✅ Последняя проверка: ")+date(s.updated)+" МСК"+(secs>900?" · не было обновлений "+Math.floor(secs/60)+" мин":"");
+ const equity=Number(s.equity??s.cash??0);
+ const pnl=Number(s.total_pnl??(equity-1000));
+ const active=Object.values(s.positions||{}).filter(p=>Number(p.qty)>1e-9);
+ const settled=s.settlements||[];
+ const marked=Number(s.open_mark_value??active.reduce((sum,p)=>sum+Number(p.cost),0));
+ $("cards").innerHTML=[
+  tile("Стоимость всего портфеля",usd(equity),"Свободные средства + открытые позиции"),
+  tile("Доходность стратегии",signed(pnl),"От стартовых $1 000",cls(pnl)),
+  tile("Свободные средства",usd(s.cash),"Без учёта открытых позиций"),
+  tile("Нереализованный результат",signed(s.unrealized||0),"Изменение стоимости открытых позиций",cls(s.unrealized||0)),
+  tile("Реализованная прибыль",signed(s.realized||0),"Продажи и официальные расчёты",cls(s.realized||0)),
+  tile("Стоимость открытых позиций",usd(marked),"Оценка, ещё не выплата"),
+  tile("Завершённые события",settled.length,"Побед "+(s.settled_wins||0)+" · поражений "+(s.settled_losses||0)),
+  tile("Скопировано / пропущено",(s.copied||0)+" / "+(s.skipped||0),"Всего операций за период")
+ ].join("");
+ $("settled-count").textContent="· "+settled.length;
+ $("positions-count").textContent="· "+active.length;
+ $("settlements").innerHTML=settled.length?settled.slice(-100).reverse().map(p=>{
+  const kind=p.result==="WIN"?"Выигрыш":p.result==="LOSS"?"Проигрыш":"50/50";
+  const color=p.result==="WIN"?"good":p.result==="LOSS"?"bad":"";
+  return '<tr><td>'+escape(p.market)+'<div class="muted">'+escape(p.outcome)+' · '+date(p.resolved_at)+'</div></td><td><span class="tag '+color+'">'+kind+'</span></td><td>'+usd(p.cost)+'</td><td>'+usd(p.payout)+'</td><td class="'+cls(p.pnl)+'">'+signed(p.pnl)+'</td></tr>';
+ }).join(""):'<tr><td colspan="5" class="empty">Пока нет официально рассчитанных событий</td></tr>';
+ $("positions").innerHTML=active.length?active.map(p=>{
+  const cost=Number(p.cost||0), mark=Number(p.mark_value??cost);
+  const flag=p.mark_source==="cost_fallback"?" · цена недоступна":p.mark_source==="gamma_indicative"?" · ориентир":"";
+  return '<tr><td>'+escape(p.title)+'<div class="muted">'+escape(p.outcome)+'</div></td><td>'+Number(p.qty).toFixed(2)+'</td><td>'+usd(cost)+'</td><td>'+usd(mark)+'<div class="muted">'+escape(flag)+'</div></td><td class="'+cls(mark-cost)+'">'+signed(mark-cost)+'</td></tr>';
+ }).join(""):'<tr><td colspan="5" class="empty">Сейчас нет открытых позиций</td></tr>';
+ $("events").innerHTML=(s.events||[]).length?s.events.slice(-70).reverse().map(p=>{
+   return '<tr><td>'+date(p.detected)+'</td><td>'+escape(p.market)+'<div class="muted">'+(p.side==="BUY"?"Покупка":"Продажа")+' · '+escape(p.outcome)+'</div></td><td><span class="tag '+(p.decision==="COPIED"?"good":"")+'">'+(p.decision==="COPIED"?"Скопировано":"Пропущено")+'</span></td><td>'+escape(reason(p.reason))+'</td><td>'+Number(p.price||0).toFixed(3)+'</td></tr>';
+ }).join(""):'<tr><td colspan="5" class="empty">Пока нет новых сигналов</td></tr>';
+ const warns=(s.valuation_errors||[]).length;let message="Период эксперимента: "+date(s.started)+" — "+date(s.end)+" МСК.";
+ if(s.valuation_status==="partial")message+=" ⚠️ Оценка портфеля частичная: нет котировки для "+Number(s.valuation_unquoted||0)+" позиций, ошибок источника: "+warns+".";
+ $("meta").textContent=message;
+}).catch(e=>{$("freshness").className="status late";$("freshness").textContent="Ошибка получения статистики: "+e.message;});
+})();
+</script>
+</body></html>
