@@ -1,7 +1,7 @@
 {
   "started": 1792679836,
   "end": 1793284636,
-  "updated": 1792688347,
+  "updated": 1792688374,
   "cash": 970.0,
   "realized": 0.0,
   "positions": {
@@ -14,7 +14,7 @@
       "mark_value": 29.35305858870494,
       "mark_price": 0.5,
       "mark_source": "best_bid",
-      "mark_updated_at": 1792688347
+      "mark_updated_at": 1792688374
     }
   },
   "seen": [
@@ -619,8 +619,8 @@
     "UFC 333: Alexander Volkanovski vs. Movsar Evloev (Featherweight, Main Card)",
     "UFC 333: Alexander Volkanovski vs. Movsar Evloev (Featherweight, Main Card)"
   ],
-  "poll_from_ts": 1792666747,
-  "polling_gap_s": 1643,
+  "poll_from_ts": 1792666774,
+  "polling_gap_s": 27,
   "feed_status": "live",
   "new_detected": 0,
   "settlements": [],
@@ -634,7 +634,7 @@
   "settled_wins": 0,
   "settled_losses": 0,
   "settled_splits": 0,
-  "valuation_at": 1792688347,
+  "valuation_at": 1792688374,
   "valuation_status": "quoted",
   "valuation_unquoted": 0,
   "valuation_errors": []
