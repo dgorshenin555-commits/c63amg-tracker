@@ -39,18 +39,33 @@ def format_line(event):
             f"   Исход: {choice} | Цена C63AMG: {signal_price:.3f}\n"
             f"   Причина: {reason_text}")
 
-def build_message(events, mode):
+def build_message(events, mode, settlements=None):
+    settlements = settlements or []
     selected = [e for e in events if mode == "all" or e.get("decision") == "COPIED"]
-    if not selected:
+    if not selected and not settlements:
         return None
     copied = sum(e.get("decision") == "COPIED" for e in selected)
-    shown = selected[:12]
-    lines = [f"📊 C63AMG · Обнаружено: {len(selected)}",
-             f"✅ Виртуально скопировано: {copied} | ⏭ Пропущено: {len(selected)-copied}",
+    lines = ["📊 C63AMG · Виртуальный портфель",
              "Только виртуальный счёт, реальных покупок нет.", ""]
-    lines.extend(format_line(e) for e in shown)
-    if len(selected) > len(shown):
-        lines.append(f"… and {len(selected)-len(shown)} more signals in the dashboard")
+    if settlements:
+        lines.append("🏁 ОФИЦИАЛЬНО РАССЧИТАННЫЕ СОБЫТИЯ:")
+        for p in settlements[:8]:
+            result = {"WIN": "✅ ПОБЕДА", "LOSS": "❌ ПОРАЖЕНИЕ", "SPLIT": "➗ 50/50"}.get(p.get("result"), "ИТОГ")
+            pnl = float(p.get("pnl", 0))
+            signed = ("+" if pnl >= 0 else "-") + "$" + f"{abs(pnl):.2f}"
+            lines.extend([
+                f"{result} · {p.get('market', '')}",
+                f"   Исход: {p.get('outcome', '')} · Вложено ${float(p.get('cost',0)):.2f}",
+                f"   Выплата: ${float(p.get('payout',0)):.2f} · Результат: {signed}",
+            ])
+        if len(settlements) > 8:
+            lines.append(f"И ещё {len(settlements)-8} завершённых событий в панели.")
+        lines.append("")
+    if selected:
+        lines.append(f"📌 Новые сигналы: {len(selected)} · виртуально скопировано: {copied} · пропущено: {len(selected)-copied}")
+        lines.extend(format_line(e) for e in selected[:10])
+        if len(selected) > 10:
+            lines.append(f"И ещё {len(selected)-10} сигналов в панели.")
     lines.append(SITE_URL)
     return "\n".join(lines)[:4000]
 
@@ -116,7 +131,7 @@ def main():
         mode = os.environ.get("TELEGRAM_NOTIFY_MODE", "copied").lower().strip()
         if mode not in ("copied", "all"):
             mode = "copied"
-        msg = build_message(data.get("events", []), mode)
+        msg = build_message(data.get("events", []), mode, data.get("settlements", []))
         if not msg:
             print("No new qualifying signals for Telegram notification.")
             return 0
