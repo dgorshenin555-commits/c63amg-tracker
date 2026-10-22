@@ -1,7 +1,7 @@
 {
   "started": 1792679836,
   "end": 1793284636,
-  "updated": 1792682914,
+  "updated": 1792683012,
   "cash": 1000.0,
   "realized": 0.0,
   "positions": {},
@@ -512,5 +512,12 @@
   "skipped": 0,
   "feed_version": "v2_activity",
   "feed_rows": 0,
-  "feed_latest_ts": 0
+  "feed_latest_ts": 0,
+  "source_24h_sample_count": 10,
+  "source_latest_known_ts": 1792682568,
+  "source_latest_markets": [
+    "UFC 333: Alexander Volkanovski vs. Movsar Evloev (Featherweight, Main Card)",
+    "UFC 333: Alexander Volkanovski vs. Movsar Evloev (Featherweight, Main Card)",
+    "UFC 333: Alexander Volkanovski vs. Movsar Evloev (Featherweight, Main Card)"
+  ]
 }
