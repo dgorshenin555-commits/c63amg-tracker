@@ -1,7 +1,7 @@
 {
   "started": 1792679836,
   "end": 1793284636,
-  "updated": 1792683012,
+  "updated": 1792685011,
   "cash": 1000.0,
   "realized": 0.0,
   "positions": {},
@@ -505,19 +505,68 @@
     "5f1a17c68f94f709139302c15db281956363871b119e739e801a483b45f4c8a2",
     "d5c89a127f5a0f8751ed538428c5b8dcc244b2ba778d71c5d08a17ac9149bfdf",
     "3753f6e260a8b458bb92445c584bc513202e12575d80caf42cef8827cf375f67",
-    "a490cf09032d4657557aaef933f87ea7b0abba8b0d8b61ca096bb4a3f73aa237"
+    "a490cf09032d4657557aaef933f87ea7b0abba8b0d8b61ca096bb4a3f73aa237",
+    "dbc3c8a2351f4e2ed0f19e039826d99c914bb4bdc83f545eeb83cb6b4d0c82f7",
+    "7115c1d3f988a560728090425ea19bc99c8cdc4e9148faf08a395c8875b741e4",
+    "3d22a0ac1a352dcff1bc9160e4cd39d31709bd89db0b9f4370231dbc8126b688",
+    "f2f01dd398a052a96aa86a1ad2104edd07ae9270c6a97731d5953d2da59aa601"
   ],
-  "events": [],
+  "events": [
+    {
+      "ts": 1792681604,
+      "detected": 1792685011,
+      "side": "BUY",
+      "market": "UFC 333: Alexander Volkanovski vs. Movsar Evloev (Featherweight, Main Card)",
+      "outcome": "Movsar Evloev",
+      "price": 0.5,
+      "decision": "SKIPPED",
+      "reason": "late_or_invalid"
+    },
+    {
+      "ts": 1792681799,
+      "detected": 1792685011,
+      "side": "BUY",
+      "market": "UFC 333: Alexander Volkanovski vs. Movsar Evloev (Featherweight, Main Card)",
+      "outcome": "Movsar Evloev",
+      "price": 0.5,
+      "decision": "SKIPPED",
+      "reason": "late_or_invalid"
+    },
+    {
+      "ts": 1792682568,
+      "detected": 1792685011,
+      "side": "BUY",
+      "market": "UFC 333: Alexander Volkanovski vs. Movsar Evloev (Featherweight, Main Card)",
+      "outcome": "Movsar Evloev",
+      "price": 0.5,
+      "decision": "SKIPPED",
+      "reason": "late_or_invalid"
+    },
+    {
+      "ts": 1792684229,
+      "detected": 1792685011,
+      "side": "BUY",
+      "market": "UFC 333: Alexander Volkanovski vs. Movsar Evloev (Featherweight, Main Card)",
+      "outcome": "Movsar Evloev",
+      "price": 0.5,
+      "decision": "SKIPPED",
+      "reason": "late_or_invalid"
+    }
+  ],
   "copied": 0,
-  "skipped": 0,
+  "skipped": 4,
   "feed_version": "v2_activity",
-  "feed_rows": 0,
-  "feed_latest_ts": 0,
+  "feed_rows": 23,
+  "feed_latest_ts": 1792684229,
   "source_24h_sample_count": 10,
-  "source_latest_known_ts": 1792682568,
+  "source_latest_known_ts": 1792684229,
   "source_latest_markets": [
     "UFC 333: Alexander Volkanovski vs. Movsar Evloev (Featherweight, Main Card)",
     "UFC 333: Alexander Volkanovski vs. Movsar Evloev (Featherweight, Main Card)",
     "UFC 333: Alexander Volkanovski vs. Movsar Evloev (Featherweight, Main Card)"
-  ]
+  ],
+  "poll_from_ts": 1792663411,
+  "polling_gap_s": 1999,
+  "feed_status": "live",
+  "new_detected": 4
 }
