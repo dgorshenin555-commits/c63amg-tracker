@@ -20,7 +20,7 @@ The bot **never places real trades**. Notifications are delivered only after pub
 1. Open the official [@BotFather](https://t.me/BotFather) in Telegram, send `/newbot`, and create a bot. **Keep its token secret**; do not paste it into chat or commit it to the repository.
 2. Open [GitHub Actions secrets](https://github.com/dgorshenin555-commits/c63amg-tracker/settings/secrets/actions). Create repository secret `TELEGRAM_BOT_TOKEN` with the token you received.
 3. In Telegram, open **your newly created bot** and press **Start** (or send `/start`).
-4. Open [C63AMG Paper Tracker Actions](https://github.com/dgorshenin555-commits/c63amg-tracker/actions/workflows/paper-tracker.yml), click **Run workflow**, choose **discover** as `telegram_action`, and run it. Open that run's **Discover Telegram chat ID** step: it will print the numeric ID of the Telegram conversation that sent `/start`.
+4. Open [C63AMG Paper Tracker Actions](https://github.com/dgorshenin555-commits/c63amg-tracker/actions/workflows/paper-tracker.yml), click **Run workflow**, choose **discover** as `telegram_action`, and run it. After that run succeeds, **your Telegram bot will send the Chat ID privately to you**, so it is not disclosed in the public GitHub Actions log. A plain private message like `Привет` also works if `/start` was already sent.
 5. On the GitHub Actions secrets page, create `TELEGRAM_CHAT_ID` with that ID.
 6. Run the workflow again with `telegram_action = test`. You should receive a test Telegram message. A run may take a few minutes to start.
 
