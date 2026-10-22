@@ -5,7 +5,7 @@ on:
     paths:
       - '.github/workflows/paper-tracker.yml'
   schedule:
-    - cron: "2-59/5 * * * *"
+    - cron: "3-58/5 * * * *"
   workflow_dispatch:
     inputs:
       telegram_action:
@@ -48,7 +48,7 @@ jobs:
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-          TELEGRAM_NOTIFY_MODE: ${{ vars.TELEGRAM_NOTIFY_MODE }}
+          TELEGRAM_NOTIFY_MODE: ${{ vars.TELEGRAM_NOTIFY_MODE || 'all' }}
         run: python notify_telegram.py
       - name: Discover Telegram chat ID
         if: github.event_name == 'workflow_dispatch' && inputs.telegram_action == 'discover'
