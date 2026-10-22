@@ -1,0 +1,21 @@
+[Unit]
+Description=C63AMG local-only dashboard
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=c63amg
+Group=c63amg
+WorkingDirectory=/var/lib/c63amg
+ExecStart=/usr/bin/python3 -m http.server 8765 --bind 127.0.0.1 --directory /var/lib/c63amg/site
+Restart=always
+RestartSec=5
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/var/lib/c63amg
+
+[Install]
+WantedBy=multi-user.target
