@@ -92,8 +92,15 @@ def run():
  # Polymarket activity may be indexed late; use a rolling overlap and dedupe by fill key.
  # Catch up after GitHub schedule delays instead of advancing the API window blindly.
  previous=int(s.get("updated",s.get("started",NOW)))
- lookback=max(1,min(previous-7200,NOW-21600))
+ fast_mode=os.environ.get("C63AMG_FAST_POLL","")=="1"
+ deep_scan=(not fast_mode) or NOW-int(s.get("last_deep_scan",0))>=600
+ # VPS polls a 15-minute overlapping window to avoid costly full-history scans
+ # every few seconds, and performs a 6-hour reconciliation every 10 minutes.
+ lookback=(max(1,min(previous-7200,NOW-21600)) if deep_scan
+           else max(1,min(previous-120,NOW-900)))
  rows=trades(lookback); seen=set(s["seen"]); newly=[]; alerts=[]
+ if deep_scan and fast_mode: s["last_deep_scan"]=NOW
+ s["scan_mode"]="deep" if deep_scan else "fast"
  s["poll_from_ts"]=lookback
  s["feed_version"]="v2_activity"
  s["polling_gap_s"]=max(0,NOW-previous)
@@ -101,13 +108,14 @@ def run():
  s["feed_rows"]=len(rows)
  s["feed_latest_ts"]=max((int(t.get("timestamp",0)) for t in rows),default=0)
  # One lightweight 24h feed diagnostic to distinguish no fresh fills from a broken source.
- diagnostic=fetch("https://data-api.polymarket.com/v2/activity?"+urllib.parse.urlencode({"user":WALLET,"type":"TRADE","limit":10,"start":max(1,NOW-86400)}))
- if not isinstance(diagnostic,dict) or not isinstance(diagnostic.get("data"),list):
-  raise RuntimeError("Malformed v2 source diagnostics")
- sample=diagnostic["data"]
- s["source_24h_sample_count"]=len(sample)
- s["source_latest_known_ts"]=max((int(v.get("timestamp") or 0) for v in sample),default=0)
- s["source_latest_markets"]=[str(v.get("title") or "")[:80] for v in sample[:3]]
+ if deep_scan or "source_latest_known_ts" not in s:
+  diagnostic=fetch("https://data-api.polymarket.com/v2/activity?"+urllib.parse.urlencode({"user":WALLET,"type":"TRADE","limit":10,"start":max(1,NOW-86400)}))
+  if not isinstance(diagnostic,dict) or not isinstance(diagnostic.get("data"),list):
+   raise RuntimeError("Malformed v2 source diagnostics")
+  sample=diagnostic["data"]
+  s["source_24h_sample_count"]=len(sample)
+  s["source_latest_known_ts"]=max((int(v.get("timestamp") or 0) for v in sample),default=0)
+  s["source_latest_markets"]=[str(v.get("title") or "")[:80] for v in sample[:3]]
  print("v2 source recent rows:",len(rows),"recent latest:",s["feed_latest_ts"],"24h sample:",len(sample),"sample latest:",s["source_latest_known_ts"])
  for t in rows:
   k=key(t)
