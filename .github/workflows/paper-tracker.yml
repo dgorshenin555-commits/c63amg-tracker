@@ -4,6 +4,8 @@ on:
     branches: [main]
     paths:
       - '.github/workflows/paper-tracker.yml'
+      - 'monitor.py'
+      - 'notify_telegram.py'
   schedule:
     - cron: "3-58/5 * * * *"
   workflow_dispatch:
