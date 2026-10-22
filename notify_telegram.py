@@ -30,8 +30,14 @@ def format_line(event):
                 f"   Outcome: {choice} | C63AMG: {signal_price:.3f} | paper: {fill_price:.3f}\n"
                 f"   {qty:.2f} shares · ${amount:.2f} · {utc_time(event.get('ts'))}")
     reason = str(event.get("reason", "unknown"))[:60]
-    return (f"⏭ {action} · {title}\n"
-            f"   Outcome: {choice} | Source: {signal_price:.3f} · skipped: {reason}")
+    meanings = {"late_or_invalid": "Сигнал старше 7 минут", "price_moved": "Цена изменилась",
+                "risk_limit": "Достигнут лимит риска", "no_inventory": "Нет долей для продажи",
+                "no_depth": "Нет доступных заявок", "price_filter": "Цена вне диапазона",
+                "bad_signal": "Некорректные данные"}
+    reason_text = meanings.get(reason, "Ошибка котировок" if reason.startswith("orderbook_error:") else reason)
+    return (f"⏭ ОБНАРУЖЕНО, НЕ СКОПИРОВАНО · {action} · {title}\n"
+            f"   Исход: {choice} | Цена C63AMG: {signal_price:.3f}\n"
+            f"   Причина: {reason_text}")
 
 def build_message(events, mode):
     selected = [e for e in events if mode == "all" or e.get("decision") == "COPIED"]
@@ -39,8 +45,9 @@ def build_message(events, mode):
         return None
     copied = sum(e.get("decision") == "COPIED" for e in selected)
     shown = selected[:12]
-    lines = [f"📊 C63AMG Paper Tracker · {copied} virtual copy / {len(selected)} new signals",
-             "Simulation only — no real orders.", ""]
+    lines = [f"📊 C63AMG · Обнаружено: {len(selected)}",
+             f"✅ Виртуально скопировано: {copied} | ⏭ Пропущено: {len(selected)-copied}",
+             "Только виртуальный счёт, реальных покупок нет.", ""]
     lines.extend(format_line(e) for e in shown)
     if len(selected) > len(shown):
         lines.append(f"… and {len(selected)-len(shown)} more signals in the dashboard")
