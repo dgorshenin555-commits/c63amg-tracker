@@ -1,7 +1,7 @@
 {
   "started": 1792679836,
   "end": 1793284636,
-  "updated": 1792700156,
+  "updated": 1792711510,
   "cash": 950.0,
   "realized": 0.0,
   "positions": {
@@ -14,7 +14,7 @@
       "mark_value": 48.92176431450824,
       "mark_price": 0.5,
       "mark_source": "best_bid",
-      "mark_updated_at": 1792700156
+      "mark_updated_at": 1792711510
     }
   },
   "seen": [
@@ -541,7 +541,8 @@
     "4735b8b3cf3859663b1c7e9359e71854b4cc3bbf5690c49613462a2a34e8eab7",
     "cfbe2e2390504c9a97e3438228371c7314354dd23d3c3d399104eb38bcafbc35",
     "f978362d002f4466daa3c4bd79b785fc0bf291f691f44d724609f0f526fcf398",
-    "ab2002f7aabee6e877a5f07877a8f1c6341ecd4d299dccae094fa6777b1edbaa"
+    "ab2002f7aabee6e877a5f07877a8f1c6341ecd4d299dccae094fa6777b1edbaa",
+    "3745dc5a875aa21f6cbbd52b6e5ca648269d2622ccf6f90ef548e6463d65a353"
   ],
   "events": [
     {
@@ -798,24 +799,34 @@
       "spent": 9.999999999999998,
       "qty": 19.568705725803294,
       "sim_price": 0.51
+    },
+    {
+      "ts": 1792700369,
+      "detected": 1792711510,
+      "side": "BUY",
+      "market": "UFC 333: Alexander Volkanovski vs. Movsar Evloev (Featherweight, Main Card)",
+      "outcome": "Movsar Evloev",
+      "price": 0.5,
+      "decision": "SKIPPED",
+      "reason": "late_or_invalid"
     }
   ],
   "copied": 5,
-  "skipped": 19,
+  "skipped": 20,
   "feed_version": "v2_activity",
-  "feed_rows": 24,
-  "feed_latest_ts": 1792699910,
+  "feed_rows": 18,
+  "feed_latest_ts": 1792700369,
   "source_24h_sample_count": 10,
-  "source_latest_known_ts": 1792699910,
+  "source_latest_known_ts": 1792700369,
   "source_latest_markets": [
     "UFC 333: Alexander Volkanovski vs. Movsar Evloev (Featherweight, Main Card)",
     "UFC 333: Alexander Volkanovski vs. Movsar Evloev (Featherweight, Main Card)",
     "UFC 333: Alexander Volkanovski vs. Movsar Evloev (Featherweight, Main Card)"
   ],
-  "poll_from_ts": 1792678556,
-  "polling_gap_s": 5314,
+  "poll_from_ts": 1792689910,
+  "polling_gap_s": 11354,
   "feed_status": "live",
-  "new_detected": 9,
+  "new_detected": 1,
   "settlements": [],
   "unrealized": -1.0782356854917552,
   "open_cost": 49.99999999999999,
@@ -827,7 +838,7 @@
   "settled_wins": 0,
   "settled_losses": 0,
   "settled_splits": 0,
-  "valuation_at": 1792700156,
+  "valuation_at": 1792711510,
   "valuation_status": "quoted",
   "valuation_unquoted": 0,
   "valuation_errors": [],
