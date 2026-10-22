@@ -92,6 +92,15 @@ def run():
  s["feed_version"]="v2_activity"
  s["feed_rows"]=len(rows)
  s["feed_latest_ts"]=max((int(t.get("timestamp",0)) for t in rows),default=0)
+ # One lightweight 24h feed diagnostic to distinguish no fresh fills from a broken source.
+ diagnostic=fetch("https://data-api.polymarket.com/v2/activity?"+urllib.parse.urlencode({"user":WALLET,"type":"TRADE","limit":10,"start":max(1,NOW-86400)}))
+ if not isinstance(diagnostic,dict) or not isinstance(diagnostic.get("data"),list):
+  raise RuntimeError("Malformed v2 source diagnostics")
+ sample=diagnostic["data"]
+ s["source_24h_sample_count"]=len(sample)
+ s["source_latest_known_ts"]=max((int(v.get("timestamp") or 0) for v in sample),default=0)
+ s["source_latest_markets"]=[str(v.get("title") or "")[:80] for v in sample[:3]]
+ print("v2 source recent rows:",len(rows),"recent latest:",s["feed_latest_ts"],"24h sample:",len(sample),"sample latest:",s["source_latest_known_ts"])
  for t in rows:
   k=key(t)
   if k not in seen:newly.append((k,t))
