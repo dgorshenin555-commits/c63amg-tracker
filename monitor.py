@@ -6,11 +6,35 @@ NOW=int(time.time())
 def fetch(url):
  req=urllib.request.Request(url,headers={"User-Agent":"c63amg-paper-tracker/1.0","Accept":"application/json"})
  with urllib.request.urlopen(req,timeout=15) as r:return json.load(r)
-def trades():
- u="https://data-api.polymarket.com/trades?"+urllib.parse.urlencode({"user":WALLET,"limit":500})
- rows=fetch(u)
- if not isinstance(rows,list):raise RuntimeError("API returned unexpected trades response")
- return sorted(rows,key=lambda t:int(t.get("timestamp",0)))
+def trades(since):
+ # v2 activity captures wallet-side fills, including maker executions.
+ # v1 /trades is legacy and by default reports taker trades only.
+ results=[]; cursor=None
+ for _ in range(5):
+  params={"user":WALLET,"type":"TRADE","limit":1000,"start":max(1,int(since)-120),"sort_direction":"DESC"}
+  if cursor: params["cursor"]=cursor
+  response=fetch("https://data-api.polymarket.com/v2/activity?"+urllib.parse.urlencode(params))
+  if not isinstance(response,dict) or not isinstance(response.get("data"),list):
+   raise RuntimeError("Unexpected Polymarket v2 activity response")
+  for x in response["data"]:
+   if x.get("type")!="TRADE" or x.get("is_combo"):continue
+   results.append({
+    "proxyWallet":x.get("proxy_wallet",x.get("proxyWallet",WALLET)),
+    "transactionHash":x.get("transaction_hash",x.get("transactionHash","")),
+    "asset":x.get("token_id",x.get("asset","")),
+    "conditionId":x.get("condition_id",x.get("conditionId","")),
+    "timestamp":x.get("timestamp",0),
+    "side":x.get("side",""),
+    "price":x.get("price",0),
+    "size":x.get("size",0),
+    "title":x.get("title",""),
+    "outcome":x.get("outcome",""),
+   })
+  cursor=(response.get("pagination") or {}).get("next_cursor")
+  if not cursor: break
+ if cursor:
+  raise RuntimeError("Activity feed exceeds 5000 items; refusing incomplete scan")
+ return sorted(results,key=lambda t:int(t.get("timestamp",0)))
 def book(token):
  v=fetch("https://clob.polymarket.com/book?"+urllib.parse.urlencode({"token_id":token}))
  return sorted([(float(x["price"]),float(x["size"])) for x in v.get("asks",[]) if float(x["size"])>0]),sorted([(float(x["price"]),float(x["size"])) for x in v.get("bids",[]) if float(x["size"])>0],reverse=True)
@@ -64,7 +88,10 @@ def apply(s,t):
  return e
 def run():
  s=json.loads(P.read_text()) if P.exists() else init()
- rows=trades(); seen=set(s["seen"]); newly=[]; alerts=[]
+ rows=trades(s.get("updated",s.get("started",NOW))); seen=set(s["seen"]); newly=[]; alerts=[]
+ s["feed_version"]="v2_activity"
+ s["feed_rows"]=len(rows)
+ s["feed_latest_ts"]=max((int(t.get("timestamp",0)) for t in rows),default=0)
  for t in rows:
   k=key(t)
   if k not in seen:newly.append((k,t))
