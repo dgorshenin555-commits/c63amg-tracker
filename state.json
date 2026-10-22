@@ -1,7 +1,7 @@
 {
   "started": 1792679836,
   "end": 1793284636,
-  "updated": 1792686704,
+  "updated": 1792688347,
   "cash": 970.0,
   "realized": 0.0,
   "positions": {
@@ -10,7 +10,11 @@
       "cost": 29.999999999999993,
       "condition": "0xfe5ed516e9a226c11a4970cf27293d843e8d5ebeccd8513034599fb58edb05fb",
       "title": "UFC 333: Alexander Volkanovski vs. Movsar Evloev (Featherweight, Main Card)",
-      "outcome": "Movsar Evloev"
+      "outcome": "Movsar Evloev",
+      "mark_value": 29.35305858870494,
+      "mark_price": 0.5,
+      "mark_source": "best_bid",
+      "mark_updated_at": 1792688347
     }
   },
   "seen": [
@@ -606,7 +610,7 @@
   "copied": 3,
   "skipped": 4,
   "feed_version": "v2_activity",
-  "feed_rows": 24,
+  "feed_rows": 21,
   "feed_latest_ts": 1792686573,
   "source_24h_sample_count": 10,
   "source_latest_known_ts": 1792686573,
@@ -615,8 +619,23 @@
     "UFC 333: Alexander Volkanovski vs. Movsar Evloev (Featherweight, Main Card)",
     "UFC 333: Alexander Volkanovski vs. Movsar Evloev (Featherweight, Main Card)"
   ],
-  "poll_from_ts": 1792665104,
-  "polling_gap_s": 1446,
+  "poll_from_ts": 1792666747,
+  "polling_gap_s": 1643,
   "feed_status": "live",
-  "new_detected": 2
+  "new_detected": 0,
+  "settlements": [],
+  "unrealized": -0.6469414112950531,
+  "open_cost": 29.999999999999993,
+  "open_mark_value": 29.35305858870494,
+  "equity": 999.3530585887049,
+  "total_pnl": -0.6469414112950744,
+  "realized_pnl": 0.0,
+  "pnl_percent": -0.06469414112950744,
+  "settled_wins": 0,
+  "settled_losses": 0,
+  "settled_splits": 0,
+  "valuation_at": 1792688347,
+  "valuation_status": "quoted",
+  "valuation_unquoted": 0,
+  "valuation_errors": []
 }
