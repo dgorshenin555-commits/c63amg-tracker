@@ -61,9 +61,10 @@ def apply(s,t):
        e.update({"decision":"COPIED","reason":"paper_sell","proceeds":cash,"qty":qty,"sim_price":cash/(qty*.998)});s["copied"]+=1
     except Exception as exc:skip("orderbook_error:"+type(exc).__name__)
  s["events"].append(e);s["events"]=s["events"][-250:]
+ return e
 def run():
  s=json.loads(P.read_text()) if P.exists() else init()
- rows=trades(); seen=set(s["seen"]); newly=[]
+ rows=trades(); seen=set(s["seen"]); newly=[]; alerts=[]
  for t in rows:
   k=key(t)
   if k not in seen:newly.append((k,t))
@@ -71,9 +72,10 @@ def run():
   s["seen"]=[key(t) for t in rows];s["events"]=[] # No historical trades on first run
  elif NOW<s["end"]:
   for k,t in newly:
-   apply(s,t)
+   alerts.append(apply(s,t))
   s["seen"]=list(dict.fromkeys((s["seen"]+[k for k,t in newly])))[-3500:]
  s["updated"]=NOW
+ pathlib.Path(".alerts.json").write_text(json.dumps({"generated_at":NOW,"events":alerts},ensure_ascii=False))
  P.write_text(json.dumps(s,ensure_ascii=False,indent=2))
  pathlib.Path("site").mkdir(exist_ok=True)
  pathlib.Path("site/state.json").write_text(json.dumps(s,ensure_ascii=False))
