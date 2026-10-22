@@ -1,7 +1,7 @@
 {
   "started": 1792679836,
   "end": 1793284636,
-  "updated": 1792691121,
+  "updated": 1792694016,
   "cash": 970.0,
   "realized": 0.0,
   "positions": {
@@ -14,7 +14,7 @@
       "mark_value": 29.35305858870494,
       "mark_price": 0.5,
       "mark_source": "best_bid",
-      "mark_updated_at": 1792691121
+      "mark_updated_at": 1792694016
     }
   },
   "seen": [
@@ -525,7 +525,13 @@
     "86e5e8896ba4d12fa0e6bbae22f0c0d724658fa99ad7e7b6aabeae47a850c705",
     "822338bdf90ba4b50ae7e2cf4657f529c76a3eaf54b86f17200172b0ca16f380",
     "1ca2ad09f9ed7c6aaa4f5a7cc4a5c5e08e0a574a8a5a2c6535efc57e2c3b7cc5",
-    "cbba3422675ed33ddc832d453cfea0cb2e4722c38728c51fac2e1ec58e786877"
+    "cbba3422675ed33ddc832d453cfea0cb2e4722c38728c51fac2e1ec58e786877",
+    "ececac2ca9401496d1a03e96e2744478b863f87afa10c2b3b864dc9719f9a359",
+    "c40e2f117bb354e5c48a3460100465dd5b588d6107b64c76437fd3e833f17a5c",
+    "48053a9348b013af68e6ad032a5c362fcc05249e5481f273be9ced036381a195",
+    "62e24d05903ce7282d3df4380c6da70b27fdb759d09212069ca8d7a587b4c50c",
+    "06ba20754073811c119750d303776067983a72bdd264f9843fc8e7b6ad6c25fd",
+    "1e4a2d62fb930ea1589fbfc13684fe827349f845116d78ad5c5479a60650df93"
   ],
   "events": [
     {
@@ -616,24 +622,84 @@
       "price": 0.5,
       "decision": "SKIPPED",
       "reason": "late_or_invalid"
+    },
+    {
+      "ts": 1792692503,
+      "detected": 1792694016,
+      "side": "BUY",
+      "market": "UFC 333: Alexander Volkanovski vs. Movsar Evloev (Featherweight, Main Card)",
+      "outcome": "Movsar Evloev",
+      "price": 0.5,
+      "decision": "SKIPPED",
+      "reason": "late_or_invalid"
+    },
+    {
+      "ts": 1792692503,
+      "detected": 1792694016,
+      "side": "BUY",
+      "market": "UFC 333: Alexander Volkanovski vs. Movsar Evloev (Featherweight, Main Card)",
+      "outcome": "Movsar Evloev",
+      "price": 0.5,
+      "decision": "SKIPPED",
+      "reason": "late_or_invalid"
+    },
+    {
+      "ts": 1792692503,
+      "detected": 1792694016,
+      "side": "BUY",
+      "market": "UFC 333: Alexander Volkanovski vs. Movsar Evloev (Featherweight, Main Card)",
+      "outcome": "Movsar Evloev",
+      "price": 0.5,
+      "decision": "SKIPPED",
+      "reason": "late_or_invalid"
+    },
+    {
+      "ts": 1792692504,
+      "detected": 1792694016,
+      "side": "BUY",
+      "market": "UFC 333: Alexander Volkanovski vs. Movsar Evloev (Featherweight, Main Card)",
+      "outcome": "Movsar Evloev",
+      "price": 0.5,
+      "decision": "SKIPPED",
+      "reason": "late_or_invalid"
+    },
+    {
+      "ts": 1792692504,
+      "detected": 1792694016,
+      "side": "BUY",
+      "market": "UFC 333: Alexander Volkanovski vs. Movsar Evloev (Featherweight, Main Card)",
+      "outcome": "Movsar Evloev",
+      "price": 0.5,
+      "decision": "SKIPPED",
+      "reason": "late_or_invalid"
+    },
+    {
+      "ts": 1792692515,
+      "detected": 1792694016,
+      "side": "BUY",
+      "market": "UFC 333: Alexander Volkanovski vs. Movsar Evloev (Featherweight, Main Card)",
+      "outcome": "Movsar Evloev",
+      "price": 0.5,
+      "decision": "SKIPPED",
+      "reason": "late_or_invalid"
     }
   ],
   "copied": 3,
-  "skipped": 5,
+  "skipped": 11,
   "feed_version": "v2_activity",
-  "feed_rows": 20,
-  "feed_latest_ts": 1792690547,
+  "feed_rows": 17,
+  "feed_latest_ts": 1792692515,
   "source_24h_sample_count": 10,
-  "source_latest_known_ts": 1792690547,
+  "source_latest_known_ts": 1792692515,
   "source_latest_markets": [
     "UFC 333: Alexander Volkanovski vs. Movsar Evloev (Featherweight, Main Card)",
     "UFC 333: Alexander Volkanovski vs. Movsar Evloev (Featherweight, Main Card)",
     "UFC 333: Alexander Volkanovski vs. Movsar Evloev (Featherweight, Main Card)"
   ],
-  "poll_from_ts": 1792669521,
-  "polling_gap_s": 1196,
+  "poll_from_ts": 1792672416,
+  "polling_gap_s": 2895,
   "feed_status": "live",
-  "new_detected": 1,
+  "new_detected": 6,
   "settlements": [],
   "unrealized": -0.6469414112950531,
   "open_cost": 29.999999999999993,
@@ -645,7 +711,7 @@
   "settled_wins": 0,
   "settled_losses": 0,
   "settled_splits": 0,
-  "valuation_at": 1792691121,
+  "valuation_at": 1792694016,
   "valuation_status": "quoted",
   "valuation_unquoted": 0,
   "valuation_errors": []
