@@ -1,7 +1,7 @@
 {
   "started": 1792679836,
   "end": 1793284636,
-  "updated": 1792740623,
+  "updated": 1792740777,
   "cash": 950.0,
   "realized": 0.0,
   "positions": {
@@ -14,7 +14,7 @@
       "mark_value": 48.92176431450824,
       "mark_price": 0.5,
       "mark_source": "best_bid",
-      "mark_updated_at": 1792740623
+      "mark_updated_at": 1792740777
     }
   },
   "seen": [
@@ -867,10 +867,10 @@
     "Almaty Open: Nikoloz Basilashvili vs Adrian Mannarino",
     "Almaty Open: Nikoloz Basilashvili vs Adrian Mannarino"
   ],
-  "poll_from_ts": 1792719023,
-  "polling_gap_s": 3692,
+  "poll_from_ts": 1792719177,
+  "polling_gap_s": 154,
   "feed_status": "live",
-  "new_detected": 4,
+  "new_detected": 0,
   "settlements": [],
   "unrealized": -1.0782356854917552,
   "open_cost": 49.99999999999999,
@@ -882,7 +882,7 @@
   "settled_wins": 0,
   "settled_losses": 0,
   "settled_splits": 0,
-  "valuation_at": 1792740623,
+  "valuation_at": 1792740777,
   "valuation_status": "quoted",
   "valuation_unquoted": 0,
   "valuation_errors": [],
