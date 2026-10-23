@@ -84,7 +84,7 @@ function render(s){snapshot=s;updateLive();renderMetrics(s);renderWeek(s);render
 async function load(){try{const response=await fetch('state.json?ts='+Date.now(),{cache:'no-store'});if(!response.ok)throw new Error('HTTP '+response.status);const s=await response.json();render(s);lastFailure='';}catch(error){lastFailure=String(error.message||error);if(!snapshot){$('sync-status').textContent='Не удалось загрузить статистику: '+lastFailure;$('live-pill').textContent='Нет данных';$('live-pill').classList.add('stale')}else{$('sync-status').textContent='Ошибка обновления. Показан предыдущий снимок: '+lastFailure;}}}
 for(const b of document.querySelectorAll('[data-filter]')){b.addEventListener('click',()=>{filter=b.dataset.filter;visible=8;for(const x of document.querySelectorAll('[data-filter]')){const selected=x===b;x.classList.toggle('active',selected);x.setAttribute('aria-pressed',selected?'true':'false')}if(snapshot)renderSignals(snapshot)})}
 $('load-more').addEventListener('click',()=>{visible+=12;if(snapshot)renderSignals(snapshot)});
-load();setInterval(load,60000);setInterval(updateLive,20000);
+load();setInterval(load,10000);setInterval(updateLive,5000);
 })();
 </script>
 </body>
