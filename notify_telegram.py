@@ -2,6 +2,7 @@
 import json
 import os
 import pathlib
+import re
 import sys
 import urllib.error
 import urllib.request
@@ -9,6 +10,17 @@ from datetime import datetime, timezone
 
 ALERTS_PATH = pathlib.Path(".alerts.json")
 SITE_URL = os.environ.get("TRACKER_SITE_URL", "https://dgorshenin555-commits.github.io/c63amg-tracker/dashboard/")
+TUNNEL_LINK_PATH = pathlib.Path("current-tunnel-url.txt")
+
+def dashboard_url():
+    """Use the current Quick Tunnel URL when the service auto-restarts."""
+    try:
+        current = TUNNEL_LINK_PATH.read_text(encoding="utf-8").strip()
+        if re.fullmatch(r"https://[a-z0-9]+(?:-[a-z0-9]+)*\.trycloudflare\.com/dashboard/", current):
+            return current
+    except OSError:
+        pass
+    return SITE_URL
 
 def utc_time(epoch):
     try:
@@ -66,7 +78,7 @@ def build_message(events, mode, settlements=None):
         lines.extend(format_line(e) for e in selected[:10])
         if len(selected) > 10:
             lines.append(f"И ещё {len(selected)-10} сигналов в панели.")
-    lines.append(SITE_URL)
+    lines.append(dashboard_url())
     return "\n".join(lines)[:4000]
 
 def main():
@@ -122,7 +134,7 @@ def main():
         print("Telegram is not configured: add TELEGRAM_BOT_TOKEN and TELEGRAM_CHAT_ID in GitHub Actions secrets.")
         return 0
     if "--test" in sys.argv:
-        msg = f"✅ C63AMG Paper Tracker Telegram is connected. Virtual trades only.\n{SITE_URL}"
+        msg = f"✅ C63AMG Paper Tracker Telegram is connected. Virtual trades only.\n{dashboard_url()}"
     else:
         if not ALERTS_PATH.exists():
             print("No alerts file; nothing to send.")
