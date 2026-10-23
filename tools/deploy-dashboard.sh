@@ -4,16 +4,16 @@ set -euo pipefail
 bundle=$(mktemp -d)
 trap 'rm -rf -- "$bundle"' EXIT
 repo=${C63AMG_REPO:-/opt/c63amg-tracker}
-release=a5acbd7
+release=47c0294cb7ee
 git -C "$repo" rev-parse --verify "$release^{commit}" >/dev/null
 mkdir -p "$bundle/site/dashboard"
 for name in index.html dashboard/index.html dashboard.css dashboard.js; do
   git -C "$repo" show "$release:site/$name" > "$bundle/site/$name"
 done
 cat > "$bundle/SHA256SUMS" <<'CHECKSUMS'
-871fa42494e929c414933d9bbc90dd07dd3cbb39b348deefbd8091d1bcec47ad  site/index.html
-f9ae5933ddb4a025f4aeee4e8ffa75d7a7124fa55ce8d912f1851baac63d5a33  site/dashboard/index.html
-527fccbf104223eeb46d9b6cfef587cf4623c783e13e9147e0898330536fab7a  site/dashboard.css
+c20229680dba93d7edf828406a3355ce81c0b51079d8c9dc43b0edbc206fcc0d  site/index.html
+1f1a6941ff2451af356b38910455b9cf1a1eb8d832f796f535e8f73df860cf51  site/dashboard/index.html
+a2375821dc653572e93611c761ccbf4b5bb5f480a82092ce8f578e7a020df051  site/dashboard.css
 3ee73488008f8370baeff147a008b03e22ba8432e82efaca6a700f26960c3baf  site/dashboard.js
 CHECKSUMS
 web_root=${C63AMG_WEB_ROOT:-/var/lib/c63amg/site}
