@@ -5,6 +5,9 @@ on:
     paths:
       - '.github/workflows/paper-tracker.yml'
       - 'site/**'
+      - 'server/**'
+      - 'notify_telegram.py'
+      - 'test_*.py'
   workflow_dispatch:
 permissions:
   contents: read
@@ -14,6 +17,16 @@ concurrency:
   group: c63amg-static-pages
   cancel-in-progress: false
 jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Verify paper account and persistent tunnel
+        run: python -m unittest -q test_quick_tunnel.py test_telegram.py test_monitor_vps.py test_server_runner.py test_valuation.py
   publish:
     runs-on: ubuntu-latest
     timeout-minutes: 10
