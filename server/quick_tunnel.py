@@ -79,6 +79,8 @@ def main() -> int:
     with subprocess.Popen(
         command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
         stdin=subprocess.DEVNULL, text=True, bufsize=1,
+        env={key: value for key, value in os.environ.items()
+             if key not in ("TELEGRAM_BOT_TOKEN", "TELEGRAM_CHAT_ID")},
     ) as process:
         announced: set[str] = set()
         for line in process.stdout:
