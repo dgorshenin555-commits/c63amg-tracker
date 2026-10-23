@@ -1,0 +1,25 @@
+[Unit]
+Description=C63AMG Cloudflare Quick Tunnel (public URL, auto-restart)
+Wants=network-online.target c63amg-web.service
+After=network-online.target c63amg-web.service
+
+[Service]
+Type=simple
+User=c63amg
+Group=c63amg
+WorkingDirectory=/var/lib/c63amg
+EnvironmentFile=-/etc/c63amg.env
+Environment=PYTHONDONTWRITEBYTECODE=1
+ExecStart=/usr/bin/python3 /opt/c63amg-tracker/server/quick_tunnel.py
+Restart=always
+RestartSec=10
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/var/lib/c63amg
+UMask=0077
+TimeoutStopSec=15
+
+[Install]
+WantedBy=multi-user.target
