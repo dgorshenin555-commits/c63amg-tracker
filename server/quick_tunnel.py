@@ -18,7 +18,7 @@ import urllib.request
 
 WORK = pathlib.Path(os.environ.get("TRACKER_DATA", "/var/lib/c63amg"))
 LINK_FILE = WORK / "current-tunnel-url.txt"
-URL_PATTERN = re.compile(r"https://[a-z0-9]+(?:-[a-z0-9]+)*\\.trycloudflare\\.com\\b", re.I)
+URL_PATTERN = re.compile(r"https://[a-z0-9]+(?:-[a-z0-9]+)*\.trycloudflare\.com\b", re.I)
 
 
 def extract_dashboard_url(line: str) -> str | None:
