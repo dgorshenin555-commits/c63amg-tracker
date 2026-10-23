@@ -37,7 +37,7 @@ jobs:
         with:
           python-version: "3.11"
       - name: Verify paper portfolio settlement rules
-        run: python -m unittest -q test_valuation.py test_telegram.py test_server_runner.py
+        run: python -m unittest -q test_valuation.py test_telegram.py test_server_runner.py test_monitor_vps.py
       - name: Collect and simulate
         run: python monitor.py
       - name: Save virtual account
