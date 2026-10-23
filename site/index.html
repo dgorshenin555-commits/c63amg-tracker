@@ -1,91 +1,538 @@
 <!doctype html>
 <html lang="ru">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#f3f4f4">
-  <meta name="description" content="C63AMG Paper Tracker — результаты виртуального копирования публичных сделок Polymarket.">
-  <link rel="icon" type="image/svg+xml" href="app-icon.svg">
-  <link rel="manifest" href="manifest.webmanifest">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="default">
-  <meta name="apple-mobile-web-app-title" content="C63AMG">
-  <title>C63AMG — Paper Tracker</title>
-  <style>
-    :root{--bg:#f1f2f3;--paper:#fff;--text:#171a1d;--muted:#737a80;--faint:#98a0a4;--border:#e8eaeb;--green:#11ac68;--greenDark:#087d4d;--greenPale:#e7f7ed;--orange:#f6a146;--orangePale:#fff3e6;--red:#d65357;--redPale:#fcecec;--shadow:0 18px 58px rgba(31,42,38,.06)}
-    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);font:15px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;color:var(--text);-webkit-font-smoothing:antialiased}button,a{-webkit-tap-highlight-color:transparent}a{color:inherit;text-decoration:none}button{font:inherit;cursor:pointer}button:focus-visible,a:focus-visible{outline:3px solid #4fbf88;outline-offset:3px}::selection{background:#bcf5d3}
-    .shell{max-width:1320px;margin:28px auto;padding:0 18px}.frame{background:#fff;border-radius:26px;border:1px solid #e7e9e9;box-shadow:var(--shadow);overflow:hidden;min-height:90vh}.inner{padding:0 clamp(22px,4.7vw,66px)}
-    header{display:flex;align-items:center;justify-content:space-between;gap:22px;padding-top:27px;padding-bottom:25px;border-bottom:1px solid #eceeef}
-    .brand{display:flex;align-items:center;gap:11px;flex-shrink:0}.brand-mark{height:35px;width:35px;background:#171b1a;border-radius:12px;display:grid;place-items:center;position:relative}.brand-mark:before,.brand-mark:after{content:"";position:absolute;border-radius:4px;background:#aaffc9;width:7px;height:21px;transform:rotate(45deg)}.brand-mark:after{transform:rotate(-45deg)}.brand-name{font-weight:770;letter-spacing:-.5px;font-size:17px;line-height:1.05}.brand-detail{font-size:10px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);margin-top:4px}
-    .top-nav{display:flex;align-items:center;gap:5px;padding:5px;background:#f5f6f6;border-radius:99px}.top-nav a{font-size:12px;font-weight:650;padding:9px 14px;border-radius:99px;color:#636b6e;white-space:nowrap}.top-nav a:hover,.top-nav a.active{background:white;color:#181b1d;box-shadow:0 2px 8px #1018160a}
-    .header-end{display:flex;align-items:center;gap:12px}.online{display:inline-flex;align-items:center;gap:7px;background:#eff8f2;border-radius:99px;color:#208054;padding:9px 11px;font-size:11px;font-weight:730;white-space:nowrap}.online:before{content:"";height:7px;width:7px;border-radius:50%;background:var(--green);box-shadow:0 0 0 4px #31c97919}.online.stale{background:#fff3e4;color:#995f1d}.online.stale:before{background:#f1a24b}.profile{display:inline-flex;align-items:center;gap:7px;background:#171a1c;color:white;border:0;border-radius:99px;padding:10px 15px;font-size:12px;font-weight:650;white-space:nowrap}.profile svg{height:12px;width:12px}
-    .hero{position:relative;display:grid;grid-template-columns:1.22fr .78fr;align-items:stretch;padding-top:67px;padding-bottom:52px;min-height:380px;isolation:isolate}.eyebrow{letter-spacing:.16em;font-size:10px;font-weight:800;text-transform:uppercase;color:var(--greenDark);display:flex;align-items:center;gap:9px}.eyebrow:before{content:"";display:inline-block;width:15px;height:2px;background:var(--green)}.hero h1{font-weight:480;max-width:740px;font-size:clamp(44px,5.5vw,74px);line-height:1.035;letter-spacing:-.064em;margin:24px 0 23px}.hero h1 em{font-family:Georgia,"Times New Roman",serif;font-weight:400;letter-spacing:-.065em}.hero-text{max-width:440px;font-size:14px;color:#6d7477;line-height:1.75;margin:0 0 27px}.hero-actions{display:flex;align-items:center;gap:17px;flex-wrap:wrap}.btn-dark{border:0;background:#17191a;color:#fff;border-radius:99px;font-size:12px;font-weight:700;padding:13px 20px;display:inline-flex;align-items:center;gap:14px;white-space:nowrap}.btn-dark span{font-size:17px;line-height:0}.text-link{font-size:12px;color:#52595a;font-weight:700;border-bottom:1px solid #b3b7b7;padding-bottom:2px}
-    .hero-art{align-self:center;position:relative;height:290px;display:flex;align-items:center;justify-content:center;overflow:hidden}.hero-art .swirl{width:240px;height:240px;border-radius:48%;position:relative;background:radial-gradient(circle at 64% 40%,#c7f6db 0 11%,#6ce6a4 12% 29%,#1ecf80 30% 48%,#078e55 59% 75%,#085b3b 80%);filter:drop-shadow(0 16px 20px #0e8f5626);transform:rotate(-23deg)}.hero-art .swirl:after{content:"";position:absolute;inset:26px;border:22px solid #78efb3;border-radius:48% 52% 46% 54%;transform:rotate(32deg);box-shadow:inset 18px -8px 13px #0c915a65,8px 10px 20px #0b9f6366}.hero-art .orbit{position:absolute;inset:17px 18px;border:1px solid #d8dfdb;border-radius:50%;transform:rotate(25deg)}.hero-art .orbit2{position:absolute;inset:45px -2px;border:1px dashed #d6e4da;border-radius:50%;transform:rotate(-23deg)}.hero-art .floating{position:absolute;background:#fff;box-shadow:0 9px 24px #0d4f2922;border:1px solid #e5eee6;border-radius:13px;padding:12px 16px;min-width:148px;z-index:2}.floating.left{left:1%;bottom:28px;transform:rotate(-7deg)}.floating.right{right:1%;top:40px;transform:rotate(6deg)}.floating .topline{font-size:9px;font-weight:800;letter-spacing:.1em;color:#85918b;text-transform:uppercase}.floating .number{font-size:25px;font-weight:720;letter-spacing:-1px}.floating .small{font-size:10px;color:#89938c}
-    .sync{border-top:1px solid #eee;padding:12px 0 17px;display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;color:#80888d;font-size:11px}.sync-left{display:flex;align-items:center;gap:9px}.sync-dot{height:7px;width:7px;background:#7ccfaa;border-radius:50%}.sync.stale .sync-dot{background:var(--orange)}
-    .section-heading{display:flex;justify-content:space-between;gap:14px;align-items:end;margin:4px 0 17px}.section-heading h2{font-size:26px;letter-spacing:-.045em;line-height:1.15;font-weight:630;margin:0}.section-heading h2 em{font-family:Georgia,serif;font-weight:400}.section-over{font-weight:800;letter-spacing:.14em;text-transform:uppercase;font-size:10px;color:#8c9695;margin-bottom:8px}.section-note{font-size:12px;color:#87908e}
-    .metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:48px}.metric-card{position:relative;background:#f9faf9;border:1px solid #edf0ee;border-radius:17px;min-height:168px;padding:21px 21px 19px;overflow:hidden}.metric-card .label{font-size:12px;color:#6b7772;line-height:1.35;min-height:35px}.metric-card .value{font-weight:710;font-size:clamp(24px,3vw,38px);line-height:1.2;letter-spacing:-.045em;margin-top:20px;font-variant-numeric:tabular-nums}.metric-card .aside{font-size:11px;color:#929c98;margin-top:10px;line-height:1.3}.metric-card.main{background:linear-gradient(130deg,#e7f7ed,#f8fffb);border-color:#d9f0e2}.metric-card.main:after{content:"";position:absolute;right:-46px;top:-52px;border-radius:50%;width:135px;height:135px;border:22px solid #aeeecb;opacity:.52}.metric-card .value.good{color:var(--greenDark)}.metric-card .value.bad{color:var(--red)}
-    .overview-row{display:grid;grid-template-columns:1.35fr .75fr;gap:16px;margin-bottom:47px}.data-panel{background:#fbfbfa;border:1px solid #e9edeb;border-radius:20px;padding:25px;min-width:0}.panel-header{display:flex;justify-content:space-between;align-items:start;gap:10px;margin-bottom:22px}.panel-title{font-size:15px;font-weight:750;letter-spacing:-.02em}.panel-sub{font-size:11px;color:#97a09c;margin-top:5px}.legend{display:flex;align-items:center;gap:12px;font-size:11px;color:#818a85;flex-wrap:wrap}.legend span:before{content:"";display:inline-block;height:8px;width:8px;border-radius:3px;background:var(--green);margin-right:5px}.legend span.alt:before{background:var(--orange)}
-    .chart{display:flex;align-items:end;justify-content:space-between;gap:12px;height:166px;padding:13px 0 0}.chart-col{height:100%;flex:1;max-width:56px;min-width:0;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:6px}.bar-stack{height:126px;min-height:126px;width:min(100%,32px);display:flex;flex-direction:column;justify-content:flex-end;border-radius:7px;overflow:hidden;background:linear-gradient(to top,#edf1ef 0 2px,transparent 2px)}.bar-copy{background:var(--green);min-height:0;transition:height .2s}.bar-skip{background:var(--orange);min-height:0}.chart-count{font-weight:700;font-size:10px;height:16px;color:#4f5f56}.chart-day{font-size:10px;color:#929d97;white-space:nowrap}.chart-caption{font-size:11px;color:#8e9893;margin-top:10px}
-    .progress-top{display:flex;justify-content:space-between;align-items:baseline;gap:8px}.progress-top .big{font-size:43px;font-weight:700;letter-spacing:-.06em;line-height:1.15}.progress-top .rest{font-size:12px;color:#818b85}.progress-track{height:8px;background:#e8efe9;border-radius:99px;overflow:hidden;margin:18px 0 13px}.progress-fill{height:100%;width:0;background:var(--green);border-radius:99px;transition:width .4s}.progress-ends{display:flex;justify-content:space-between;color:#85928a;font-size:11px}.allocation{border-top:1px solid #e6ece8;margin-top:25px;padding-top:19px}.alloc-grid{display:flex;gap:10px;margin-top:12px}.allocation-piece{height:9px;border-radius:99px;background:#dbe3df;flex:1}.allocation-piece.cash{background:#29c880}.allocation-piece.open{background:#a5e9bf}.alloc-row{display:flex;justify-content:space-between;gap:10px;margin-top:10px;font-size:11px;color:#87958e}.alloc-row b{color:#2a3330;font-size:12px}
-    .positions-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-bottom:47px}.position-card{border:1px solid #e8ece9;border-radius:19px;padding:23px;min-width:0;background:#fff;transition:border-color .18s}.position-card:hover{border-color:#a8d9bc}.position-head{display:flex;align-items:start;gap:14px}.sport-icon{display:grid;place-items:center;height:49px;width:49px;border-radius:13px;background:#f0f3f1;color:#272f2b;font-size:15px;font-weight:850;letter-spacing:-.05em;flex-shrink:0}.sport-icon.ufc{background:#fcf0ee;color:#cf302a}.sport-icon.wta{background:#f2ecff;color:#7651ca}.sport-icon.foot{background:#e8f5e9;color:#338551}.position-name{font-size:14px;font-weight:710;line-height:1.4;max-width:100%;overflow-wrap:anywhere}.position-outcome{font-size:12px;color:#7e8b83;margin-top:5px}.position-bottom{margin-top:23px;padding-top:18px;border-top:1px solid #eef1ef;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.p-detail-label{font-size:10px;color:#94a09a}.p-detail-value{font-size:16px;font-weight:700;margin-top:5px;letter-spacing:-.03em;font-variant-numeric:tabular-nums}.pill-small{background:var(--greenPale);color:var(--greenDark);padding:4px 9px;border-radius:99px;font-size:10px;font-weight:740;display:inline-block;margin-top:11px}.noted{color:#909c95;font-size:11px;margin-top:12px}
-    .empty{border:1px dashed #dce6de;padding:34px 20px;border-radius:18px;text-align:center;grid-column:1/-1;color:#89968e;background:#fbfcfb}.empty .empty-circle{height:58px;width:58px;background:#edfaf2;border-radius:50%;display:grid;place-items:center;color:#19a365;font-size:30px;margin:0 auto 10px}.empty strong{display:block;color:#29312c;font-size:15px;margin-bottom:6px}
-    .activity-section{padding-bottom:45px}.filters{display:flex;gap:4px;background:#f6f7f7;padding:4px;border-radius:99px}.filters button{background:none;border:0;border-radius:99px;padding:9px 14px;font-size:11px;color:#87918b;font-weight:700}.filters button.active{color:#18211b;background:#fff;box-shadow:0 2px 8px #1220190c}.signal-list{border:1px solid #e9ecea;border-radius:20px;overflow:hidden;background:#fff}.signal{display:grid;grid-template-columns:70px minmax(0,1fr) 154px 97px;align-items:center;gap:18px;padding:18px 22px;border-bottom:1px solid #f0f1f1}.signal:last-child{border-bottom:0}.signal:nth-child(even){background:#fbfcfb}.signal-time{font-size:11px;color:#86938d;font-variant-numeric:tabular-nums}.signal-info{min-width:0}.signal-title{font-size:13px;font-weight:660;color:#2b3230;line-height:1.35}.signal-sub{font-size:11px;color:#939c98;margin-top:6px}.signal-state{font-size:10px;font-weight:750;display:inline-block;border-radius:99px;padding:5px 9px;white-space:nowrap;background:var(--orangePale);color:#a66922}.signal-state.copied{background:var(--greenPale);color:var(--greenDark)}.signal-reason{font-size:11px;color:#9aa39f;margin-top:5px;max-width:170px;line-height:1.3}.signal-prices{text-align:right}.signal-prices b{font-size:17px;letter-spacing:-.035em}.signal-prices div{font-size:10px;color:#96a09b}.activity-bottom{display:flex;justify-content:center;padding-top:18px}.loadmore{border:1px solid #e1e7e3;border-radius:99px;padding:10px 19px;background:#fff;font-size:12px;font-weight:730;color:#49524d}.loadmore:hover{border-color:#6dc494}
-    .settlement-list{display:grid;grid-template-columns:repeat(2,1fr);gap:13px;padding-bottom:34px}.settlement{display:flex;justify-content:space-between;gap:12px;border:1px solid var(--border);border-radius:15px;padding:16px 19px}.settlement b{font-size:13px}.settlement .smeta{color:#8f9993;font-size:11px;margin-top:4px}.settlement .spnl{font-weight:800;font-size:18px;white-space:nowrap}
-    .footer{background:#171b1b;color:#fff;padding:28px clamp(22px,4.7vw,66px);display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}.footer strong{font-weight:760}.footer p{font-size:11px;color:#b2bab6;max-width:650px;margin:8px 0 0;line-height:1.7}.footer a{font-size:12px;font-weight:700;color:#bff4d2;text-decoration:underline;text-underline-offset:4px}
-    .no-js{margin:16px 0;border-radius:12px;background:#fef1df;padding:14px}
-    @media(max-width:1050px){.top-nav{display:none}.hero h1{font-size:clamp(42px,6.4vw,65px)}.hero-art .floating.left{left:0}.hero-art .floating.right{right:0}.overview-row{grid-template-columns:1.15fr .85fr}}
-    @media(max-width:800px){.shell{margin:0;padding:0}.frame{border-radius:0;border:0}.inner{padding:0 22px}.hero{padding-top:42px;padding-bottom:28px;min-height:0}.hero-art{height:230px}.hero-art .swirl{width:190px;height:190px}.hero-art .floating{padding:8px 11px;min-width:110px}.floating .number{font-size:19px}.hero h1{font-size:48px}.metrics{grid-template-columns:repeat(2,1fr)}.overview-row{grid-template-columns:1fr}.positions-grid{grid-template-columns:1fr}.settlement-list{grid-template-columns:1fr}.metric-card{min-height:145px}}
-    @media(max-width:560px){header{padding-top:18px;padding-bottom:16px}.inner{padding:0 17px}.brand-mark{width:32px;height:32px}.brand-name{font-size:15px}.online{font-size:10px;padding:8px 10px}.header-end{gap:6px}.profile{padding:8px 10px;font-size:10px}.profile svg{display:none}.hero{display:block;padding-top:31px;padding-bottom:14px}.hero h1{font-size:clamp(39px,10.6vw,54px);max-width:500px;letter-spacing:-.065em;margin:16px 0}.hero-text{font-size:13px;line-height:1.65;margin-bottom:18px}.hero-art{height:177px;margin:8px 0 -5px}.hero-art .swirl{width:135px;height:135px}.hero-art .swirl:after{inset:18px;border-width:12px}.hero-art .floating.left{bottom:9px;left:5%}.hero-art .floating.right{top:4px;right:5%}.hero-art .floating .small{display:none}.hero-art .floating{min-width:95px;padding:7px 9px}.floating .number{font-size:17px}.hero-art .orbit{inset:7px 20%}.hero-art .orbit2{inset:20px 15%}.hero-actions{gap:13px}.sync{font-size:10px;padding:11px 0 20px}.section-heading h2{font-size:24px}.section-note{font-size:11px}.metrics{gap:9px;margin-bottom:34px}.metric-card{padding:16px 14px;min-height:141px}.metric-card .value{font-size:26px;margin-top:15px}.metric-card .label{font-size:11px;min-height:31px}.metric-card .aside{font-size:10px}.data-panel{padding:19px}.overview-row{gap:11px;margin-bottom:36px}.panel-header{flex-wrap:wrap}.positions-grid{margin-bottom:35px}.position-card{padding:17px}.position-bottom{gap:7px}.p-detail-value{font-size:14px}.section-heading.filters-heading{display:block}.filters{display:inline-flex;margin-top:13px}.signal{grid-template-columns:1fr auto;gap:7px 10px;padding:16px}.signal-time{grid-column:1;grid-row:1}.signal-prices{grid-column:2;grid-row:1/3}.signal-info{grid-column:1;grid-row:2}.signal-status-group{grid-column:1/-1;grid-row:3;margin-top:5px}.signal-reason{display:inline;margin-left:7px}.signal-title{font-size:12px}.signal-prices b{font-size:15px}.activity-section{padding-bottom:30px}.footer{padding:25px 18px}}
-    @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
-  </style>
-</head>
-<body>
-<div class="shell"><div class="frame">
-  <div class="inner">
-    <header>
-      <a class="brand" href="#top" aria-label="C63AMG — наверх"><span class="brand-mark" aria-hidden="true"></span><span><div class="brand-name">C63AMG</div><div class="brand-detail">Paper tracker</div></span></a>
-      <nav class="top-nav" aria-label="Навигация"><a href="#summary" class="active">Обзор</a><a href="#positions">Позиции</a><a href="#activity">Активность</a><a href="#settlements">Итоги</a></nav>
-      <div class="header-end"><span id="live-pill" class="online">Проверка…</span><a class="profile" href="https://polymarket.com/ru/@c63amg" target="_blank" rel="noopener noreferrer">Профиль трейдера <svg fill="none" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 12 12 4M5.5 4H12v6.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></a></div>
-    </header>
-    <section class="hero" id="top" aria-labelledby="hero-title"><div><div class="eyebrow">Контроль стратегии / 7 дней</div><h1 id="hero-title">Каждая сделка.<br><em>Под контролем.</em></h1><p class="hero-text">Наблюдаем за C63AMG на Polymarket и проверяем, какие сделки действительно можно повторить. Только виртуальные средства, реальные рыночные котировки и честные причины пропусков.</p><div class="hero-actions"><a href="#activity" class="btn-dark">Последние сделки <span aria-hidden="true">↗</span></a><a href="#positions" class="text-link">Открытые позиции</a></div></div><div class="hero-art" aria-hidden="true"><div class="orbit"></div><div class="orbit2"></div><div class="swirl"></div><div class="floating left"><div class="topline">Виртуальный счёт</div><div class="number">$1 000</div><div class="small">Без реальных денег</div></div><div class="floating right"><div class="topline">Копирование</div><div class="number" id="art-copied">—</div><div class="small">Сделок выполнено</div></div></div></section>
-    <div class="sync" id="sync-banner" role="status" aria-live="polite"><div class="sync-left"><span class="sync-dot"></span><span id="sync-status">Получаем последние данные…</span></div><span id="sync-time">Время по Москве</span></div>
-    <section id="summary" aria-label="Ключевые показатели"><div class="section-heading"><div><div class="section-over">Текущие результаты</div><h2>Цифры, которые <em>важны</em></h2></div><span class="section-note">Виртуальный портфель · USD</span></div><div class="metrics" id="metrics"><div class="metric-card main"><div class="label">Стоимость портфеля</div><div class="value">—</div></div></div></section>
-    <div class="overview-row"><section class="data-panel" aria-labelledby="chart-title"><div class="panel-header"><div><div id="chart-title" class="panel-title">Активность за неделю</div><div class="panel-sub">Количество обнаруженных сделок, без прогнозов</div></div><div class="legend"><span>Скопировано</span><span class="alt">Пропущено</span></div></div><div class="chart" id="weekly-chart" role="img" aria-label="Активность: копирование и пропуски за семь дней"></div><div class="chart-caption" id="chart-caption">График строится по реальным сигналам нашего бота</div></section>
-      <section class="data-panel" aria-labelledby="period-title"><div class="panel-header"><div><div id="period-title" class="panel-title">Эксперимент · 7 дней</div><div class="panel-sub" id="period-label">Подсчитываем время…</div></div><span class="pill-small" id="period-pill">PAPER ONLY</span></div><div class="progress-top"><div class="big" id="day-counter">—</div><div class="rest" id="days-remain">из 7 дней</div></div><div class="progress-track" role="progressbar" aria-label="Прогресс семидневного теста" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="progress"><div class="progress-fill" id="progress-fill"></div></div><div class="progress-ends"><span id="date-start">Старт —</span><span id="date-end">Конец —</span></div><div class="allocation"><div class="panel-title">Структура портфеля</div><div class="alloc-grid" id="alloc-graph" aria-label="Структура виртуального счёта"><span class="allocation-piece cash"></span><span class="allocation-piece open"></span></div><div class="alloc-row"><span>Свободно <b id="free-amount">—</b></span><span>В позициях <b id="open-amount">—</b></span></div></div></section></div>
-    <section id="positions" aria-labelledby="positions-title"><div class="section-heading"><div><div class="section-over">Виртуальный портфель</div><h2 id="positions-title">Открытые <em>позиции</em></h2></div><span class="section-note" id="positions-summary">—</span></div><div class="positions-grid" id="positions-list"><div class="empty"><strong>Проверяем позиции…</strong></div></div></section>
-    <section id="activity" class="activity-section" aria-labelledby="activity-title"><div class="section-heading filters-heading"><div><div class="section-over">Лента наблюдения</div><h2 id="activity-title">Последние <em>сделки</em></h2></div><div class="filters" role="group" aria-label="Фильтр сделок"><button type="button" data-filter="all" class="active" aria-pressed="true">Все</button><button type="button" data-filter="COPIED" aria-pressed="false">Скопировано</button><button type="button" data-filter="SKIPPED" aria-pressed="false">Пропущено</button></div></div><div class="signal-list" id="signals"><div class="empty"><strong>Получаем историю наблюдения…</strong></div></div><div class="activity-bottom"><button type="button" id="load-more" class="loadmore" hidden>Показать ещё</button></div></section>
-    <section id="settlements" aria-labelledby="settlements-title"><div class="section-heading"><div><div class="section-over">Зафиксированный результат</div><h2 id="settlements-title">Завершённые <em>события</em></h2></div><span class="section-note" id="settlement-count">—</span></div><div class="settlement-list" id="settlement-list"><div class="empty"><strong>Пока нет рассчитанных событий</strong><span>После завершения рынка результат появится здесь.</span></div></div></section>
-  </div>
-  <footer class="footer"><div><strong>C63AMG · Paper Tracker</strong><p>Это виртуальная симуляция, не инвестиционный совет и не реальные заявки. Оценка открытых позиций зависит от доступных котировок. GitHub Actions может запускаться с задержками; сообщение в Telegram не подтверждает исполнение сделки.</p></div><a href="https://github.com/dgorshenin555-commits/c63amg-tracker/actions" target="_blank" rel="noopener noreferrer">Журнал запусков ↗</a></footer>
-</div></div>
-<script>
-(()=>{
-'use strict';
-const $=id=>document.getElementById(id);
-const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const num=v=>{const n=Number(v);return Number.isFinite(n)?n:0};
-const usd=(v,dec=2)=>'$'+num(v).toLocaleString('en-US',{minimumFractionDigits:dec,maximumFractionDigits:dec});
-const signed=v=>(num(v)<0?'−':'+')+usd(Math.abs(num(v)));
-const cls=v=>num(v)<-0.00001?'bad':num(v)>0.00001?'good':'';
-const dt=(ts,options={})=>ts?new Date(num(ts)*1000).toLocaleString('ru-RU',{timeZone:'Europe/Moscow',day:'2-digit',month:'short',...options}):'—';
-const dayKey=ts=>ts?new Date(num(ts)*1000).toLocaleDateString('en-CA',{timeZone:'Europe/Moscow',year:'numeric',month:'2-digit',day:'2-digit'}):'';
-const reasons={late_or_invalid:'Сигнал старше 7 минут',price_moved:'Цена уже изменилась',no_inventory:'Нет долей для продажи',risk_limit:'Лимит риска',price_filter:'Цена вне диапазона',no_depth:'Нет заявок по нужной цене',bad_signal:'Некорректные данные'};
-const reason=r=>reasons[r]||((r||'').startsWith('orderbook_error:')?'Котировка недоступна':r==='paper_buy'?'Виртуальная покупка исполнена':r==='paper_sell'?'Виртуальная продажа исполнена':r||'—');
-const marketIcon=t=>/UFC|MMA|fight|boxing/i.test(t||'')?['UFC','ufc']:/WTA|tennis|ATP/i.test(t||'')?['WTA','wta']:/football|LALIGA|vs\.|soccer/i.test(t||'')?['●','foot']:['↗',''];
-let snapshot=null,filter='all',visible=8,lastFailure='';
-function metric(label,val,desc,tone='',primary=false){return `<div class="metric-card ${primary?'main':''}"><div class="label">${esc(label)}</div><div class="value ${tone}">${esc(val)}</div><div class="aside">${esc(desc)}</div></div>`;}
-function updateLive(){if(!snapshot)return;const secs=Math.max(0,Math.floor(Date.now()/1000-num(snapshot.updated)));const stale=secs>900;const msg=stale?`Данные устарели · ${Math.floor(secs/60)} мин без обновлений`:`Последний опрос · ${dt(snapshot.updated,{hour:'2-digit',minute:'2-digit'})} МСК`;$('live-pill').className='online'+(stale?' stale':'');$('live-pill').textContent=stale?'Обновление задерживается':'Мониторинг';$('sync-banner').classList.toggle('stale',stale);$('sync-status').textContent=msg;$('sync-time').textContent=`Проверено: ${dt(snapshot.updated,{hour:'2-digit',minute:'2-digit'})} МСК`}
-function renderMetrics(s){const positions=Object.values(s.positions||{}).filter(p=>num(p.qty)>1e-9);const posValue=positions.reduce((a,p)=>a+num(p.mark_value??p.cost),0);const equity=num(s.equity??(num(s.cash)+posValue));const pnl=num(s.total_pnl??(equity-1000));const unreal=num(s.unrealized??(posValue-positions.reduce((a,p)=>a+num(p.cost),0)));$('metrics').innerHTML=[metric('Стоимость портфеля',usd(equity),'Свободные деньги + открытые позиции','',true),metric('Общий результат',signed(pnl),'От начального баланса $1 000',cls(pnl)),metric('Виртуально скопировано',String(s.copied||0),`Пропущено сигналов: ${s.skipped||0}`),metric('Свободные средства',usd(s.cash),'Доступно для новых симуляций')].join('');$('art-copied').textContent=String(s.copied||0);$('free-amount').textContent=usd(s.cash);$('open-amount').textContent=usd(posValue);const total=Math.max(0,num(s.cash))+Math.max(0,posValue),w=total?100*num(s.cash)/total:100;$('alloc-graph').innerHTML=`<span class="allocation-piece cash" style="flex:${Math.max(.1,w)}"></span><span class="allocation-piece open" style="flex:${Math.max(.1,100-w)}"></span>`;}
-function renderWeek(s){const start=num(s.started),end=num(s.end),now=Date.now()/1000,progress=end>start?Math.max(0,Math.min(100,(now-start)/(end-start)*100)):0;const days=Math.max(0,Math.min(7,Math.floor((now-start)/86400)+1));$('day-counter').textContent=now>end?'7/7':days+'/7';$('days-remain').textContent=now>end?'Тест завершён':'дней теста';$('period-label').textContent=now>end?'Семидневный период завершён':'Текущий тест · без реальных денег';$('progress-fill').style.width=progress.toFixed(1)+'%';$('progress').setAttribute('aria-valuenow',Math.round(progress));$('date-start').textContent=dt(start,{day:'2-digit',month:'short'});$('date-end').textContent=dt(end,{day:'2-digit',month:'short'});let count=[];for(let i=0;i<7;i++){const day=start+i*86400;count.push({day:dt(day,{day:'2-digit',month:'short'}),key:dayKey(day),copy:0,skip:0});}for(const e of s.events||[]){const index=count.findIndex(x=>x.key===dayKey(e.ts||e.detected));if(index>=0){if(e.decision==='COPIED')count[index].copy++;else count[index].skip++;}}const max=Math.max(1,...count.map(x=>x.copy+x.skip));$('weekly-chart').innerHTML=count.map(x=>{const copied=100*x.copy/max,skipped=100*x.skip/max;return `<div class="chart-col" title="${esc(x.day)}: ${x.copy} скопировано, ${x.skip} пропущено"><div class="chart-count">${x.copy+x.skip||''}</div><div class="bar-stack"><div class="bar-skip" style="height:${skipped}%"></div><div class="bar-copy" style="height:${copied}%"></div></div><div class="chart-day">${esc(x.day.split(' ')[0])}</div></div>`;}).join('');$('chart-caption').textContent=`${s.copied||0} скопировано · ${s.skipped||0} пропущено. График основан на сохранённых сигналах.`;}
-function renderPositions(s){const positions=Object.values(s.positions||{}).filter(p=>num(p.qty)>1e-9);$('positions-summary').textContent=`${positions.length} активных · ${usd(positions.reduce((a,p)=>a+num(p.cost),0))} вложено`;$('positions-list').innerHTML=positions.length?positions.map(p=>{const ico=marketIcon(p.title);const cost=num(p.cost),mark=num(p.mark_value??cost),diff=mark-cost;const quality=p.mark_source==='cost_fallback'?'Котировка недоступна, показана себестоимость':p.mark_source==='gamma_indicative'?'Ориентировочная котировка':'Оценка по доступной цене продажи';return `<article class="position-card"><div class="position-head"><div class="sport-icon ${ico[1]}" aria-hidden="true">${ico[0]}</div><div><div class="position-name">${esc(p.title)}</div><div class="position-outcome">Исход: <strong>${esc(p.outcome)}</strong></div><span class="pill-small">● Виртуальная позиция</span></div></div><div class="position-bottom"><div><div class="p-detail-label">Вложено</div><div class="p-detail-value">${usd(cost)}</div></div><div><div class="p-detail-label">Оценка сейчас</div><div class="p-detail-value">${usd(mark)}</div></div><div><div class="p-detail-label">P&amp;L</div><div class="p-detail-value" style="color:${diff<0?'#d65357':'#08834e'}">${signed(diff)}</div></div></div><div class="noted">${num(p.qty).toFixed(2)} долей · ${esc(quality)}</div></article>`;}).join(''):`<div class="empty"><div class="empty-circle">◌</div><strong>Нет открытых позиций</strong><span>Новые виртуальные покупки появятся здесь автоматически.</span></div>`;}
-function renderSignals(s){const records=(s.events||[]).filter(e=>filter==='all'||e.decision===filter).slice().reverse();const show=records.slice(0,visible);$('signals').innerHTML=show.length?show.map(e=>{const copied=e.decision==='COPIED',price=num(e.price);const displayReason=reason(e.reason);const simPrice=e.sim_price!=null?`Наша цена: ${Math.round(num(e.sim_price)*1000)/10}¢`:'Не исполнено';return `<article class="signal"><div class="signal-time">${dt(e.detected,{hour:'2-digit',minute:'2-digit'})}</div><div class="signal-info"><div class="signal-title">${esc(e.market)}</div><div class="signal-sub">${e.side==='BUY'?'Покупка':'Продажа'} · ${esc(e.outcome)}</div></div><div class="signal-status-group"><span class="signal-state ${copied?'copied':''}">${copied?'✓ Скопировано':'↷ Пропущено'}</span><div class="signal-reason">${esc(displayReason)}</div></div><div class="signal-prices"><b>${(price*100).toFixed(1).replace(/\.0$/,'')}¢</b><div>${esc(simPrice)}</div></div></article>`;}).join(''):`<div class="empty"><div class="empty-circle">↗</div><strong>Здесь пока пусто</strong><span>${filter==='all'?'Ожидаем первые новые сделки трейдера.':'Для этого фильтра сделок пока нет.'}</span></div>`;$('load-more').hidden=records.length<=visible;}
-function renderSettled(s){const v=(s.settlements||[]).slice().reverse();$('settlement-count').textContent=`${v.length} событий`;$('settlement-list').innerHTML=v.length?v.slice(0,20).map(p=>`<div class="settlement"><div><b>${esc(p.market||'Событие')}</b><div class="smeta">${esc(p.outcome)} · ${p.result==='WIN'?'Выигрыш':p.result==='LOSS'?'Проигрыш':'Расчёт'} · ${dt(p.resolved_at)}</div></div><div class="spnl" style="color:${num(p.pnl)<0?'#d65357':'#08834e'}">${signed(p.pnl)}</div></div>`).join(''):`<div class="empty"><div class="empty-circle">✓</div><strong>Официальных расчётов пока нет</strong><span>После завершения событий результаты появятся здесь.</span></div>`;}
-function render(s){snapshot=s;updateLive();renderMetrics(s);renderWeek(s);renderPositions(s);renderSignals(s);renderSettled(s);}
-async function load(){try{const response=await fetch('state.json?ts='+Date.now(),{cache:'no-store'});if(!response.ok)throw new Error('HTTP '+response.status);const s=await response.json();render(s);lastFailure='';}catch(error){lastFailure=String(error.message||error);if(!snapshot){$('sync-status').textContent='Не удалось загрузить статистику: '+lastFailure;$('live-pill').textContent='Нет данных';$('live-pill').classList.add('stale')}else{$('sync-status').textContent='Ошибка обновления. Показан предыдущий снимок: '+lastFailure;}}}
-for(const b of document.querySelectorAll('[data-filter]')){b.addEventListener('click',()=>{filter=b.dataset.filter;visible=8;for(const x of document.querySelectorAll('[data-filter]')){const selected=x===b;x.classList.toggle('active',selected);x.setAttribute('aria-pressed',selected?'true':'false')}if(snapshot)renderSignals(snapshot)})}
-$('load-more').addEventListener('click',()=>{visible+=12;if(snapshot)renderSignals(snapshot)});
-load();setInterval(load,10000);setInterval(updateLive,5000);
-})();
-</script>
-</body>
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <meta name="theme-color" content="#eaf0eb" />
+    <meta
+      name="description"
+      content="C63AMG Tracker — портфель, сделки и результаты семидневного виртуального эксперимента Polymarket."
+    />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="C63AMG" />
+    <link rel="icon" type="image/svg+xml" href="app-icon.svg" />
+    <link rel="manifest" href="manifest.webmanifest" />
+    <link rel="stylesheet" href="dashboard.css" />
+    <script src="dashboard.js" defer></script>
+    <title>C63AMG — Обзор портфеля</title>
+  </head>
+  <body data-state-url="state.json">
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      style="position: absolute; width: 0; height: 0; overflow: hidden"
+      aria-hidden="true"
+    >
+      <defs>
+        <symbol id="i-grid" viewBox="0 0 24 24">
+          <rect x="3" y="3" width="7" height="7" rx="1.5" />
+          <rect x="14" y="3" width="7" height="7" rx="1.5" />
+          <rect x="3" y="14" width="7" height="7" rx="1.5" />
+          <rect x="14" y="14" width="7" height="7" rx="1.5" />
+        </symbol>
+        <symbol id="i-chart" viewBox="0 0 24 24">
+          <path d="M4 19h16M7 15V9m5 6V5m5 10v-4" />
+        </symbol>
+        <symbol id="i-activity" viewBox="0 0 24 24">
+          <path d="M3 12h4l3-8 4 16 3-8h4" />
+        </symbol>
+        <symbol id="i-arrow" viewBox="0 0 24 24">
+          <path d="M6 18 18 6M6 6h12v12" />
+        </symbol>
+        <symbol id="i-wallet" viewBox="0 0 24 24">
+          <path
+            d="M20 8V6a2 2 0 0 0-2-2H6a3 3 0 0 0 0 6h14v9H6a3 3 0 0 1-3-3V7m17 6h-4v3h4"
+          />
+        </symbol>
+        <symbol id="i-refresh" viewBox="0 0 24 24">
+          <path
+            d="M20 7v5h-5M4 17v-5h5m-4-4a8 8 0 0 1 13-3l2 3M4 16l2 3a8 8 0 0 0 13-3"
+          />
+        </symbol>
+        <symbol id="i-copy" viewBox="0 0 24 24">
+          <rect x="8" y="8" width="12" height="13" rx="2" />
+          <path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3" />
+        </symbol>
+        <symbol id="i-positions" viewBox="0 0 24 24">
+          <path d="M3 7h18v13H3zM8 7V4h8v3M3 12h18m-11 0v3h4v-3" />
+        </symbol>
+        <symbol id="i-search" viewBox="0 0 24 24">
+          <circle cx="10.5" cy="10.5" r="6.5" />
+          <path d="m16 16 5 5" />
+        </symbol>
+        <symbol id="i-download" viewBox="0 0 24 24">
+          <path d="M12 3v12m-4-4 4 4 4-4M4 16v5h16v-5" />
+        </symbol>
+        <symbol id="i-chevron" viewBox="0 0 24 24">
+          <path d="m8 10 4 4 4-4" />
+        </symbol>
+        <symbol id="i-check" viewBox="0 0 24 24">
+          <path d="m5 12 4 4L19 6" />
+        </symbol>
+        <symbol id="i-skip" viewBox="0 0 24 24">
+          <path d="M4 16c0-6 6-8 14-8m-4-4 4 4-4 4" />
+        </symbol>
+        <symbol id="i-clock" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="9" />
+          <path d="M12 7v5l3 2" />
+        </symbol>
+        <symbol id="i-info" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="9" />
+          <path d="M12 11v6m0-10h.01" />
+        </symbol>
+      </defs>
+    </svg>
+    <a href="#overview" class="sr-only">Перейти к содержимому</a>
+    <div class="app">
+      <aside class="rail" aria-label="Быстрая навигация">
+        <a class="brand" href="#overview" aria-label="C63AMG — обзор"
+          ><svg viewBox="0 0 40 40" fill="none" aria-hidden="true">
+            <path
+              d="M28 9H17C7 9 5 30 17 31c6 1 10-3 11-7H17l3-9h10"
+              stroke="currentColor"
+              stroke-width="3.2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <path
+              d="M22 4h7c9 0 8 12 1 12H16"
+              stroke="currentColor"
+              stroke-width="3.2"
+              stroke-linecap="round"
+            /></svg
+        ></a>
+        <div class="rail-links">
+          <a
+            class="rail-link active"
+            href="#overview"
+            aria-label="Обзор"
+            title="Обзор"
+            ><svg class="icon" aria-hidden="true"><use href="#i-grid" /></svg
+          ></a>
+          <a
+            class="rail-link"
+            href="#positions"
+            aria-label="Позиции"
+            title="Позиции"
+            ><svg class="icon" aria-hidden="true">
+              <use href="#i-positions" /></svg
+          ></a>
+          <a
+            class="rail-link"
+            href="#activity"
+            aria-label="Активность"
+            title="Активность"
+            ><svg class="icon" aria-hidden="true">
+              <use href="#i-activity" /></svg
+          ></a>
+          <a
+            class="rail-link"
+            href="#experiment"
+            aria-label="Эксперимент"
+            title="Эксперимент"
+            ><svg class="icon" aria-hidden="true"><use href="#i-clock" /></svg
+          ></a>
+        </div>
+        <span class="rail-bottom" title="Виртуальная симуляция">P / T</span>
+      </aside>
+      <header class="header">
+        <a class="mobile-brand" href="#overview"
+          ><svg viewBox="0 0 40 40" fill="none" aria-hidden="true">
+            <path
+              d="M28 9H17C7 9 5 30 17 31c6 1 10-3 11-7H17l3-9h10"
+              stroke="currentColor"
+              stroke-width="3.2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <path
+              d="M22 4h7c9 0 8 12 1 12H16"
+              stroke="currentColor"
+              stroke-width="3.2"
+              stroke-linecap="round"
+            /></svg
+          ><span>C63AMG</span></a
+        >
+        <nav class="nav" aria-label="Основная навигация">
+          <a class="active" href="#overview"
+            ><svg class="icon" aria-hidden="true"><use href="#i-grid" /></svg>
+            Обзор</a
+          >
+          <a href="#positions"
+            ><svg class="icon" aria-hidden="true">
+              <use href="#i-positions" />
+            </svg>
+            Позиции</a
+          >
+          <a href="#activity"
+            ><svg class="icon" aria-hidden="true">
+              <use href="#i-activity" />
+            </svg>
+            Активность</a
+          >
+        </nav>
+        <div class="header-status" id="connection-status" role="status">
+          <span class="dot stale" id="connection-dot"></span
+          ><span id="connection-label">Загрузка данных</span>
+        </div>
+      </header>
+      <main class="main">
+        <section id="overview" aria-labelledby="page-title">
+          <div class="intro">
+            <div>
+              <div class="eyebrow">C63AMG / PAPER TRACKER</div>
+              <h1 id="page-title">Ваш портфель</h1>
+            </div>
+            <button
+              class="refresh"
+              id="refresh"
+              type="button"
+              aria-label="Обновить данные"
+            >
+              <svg class="icon" aria-hidden="true">
+                <use href="#i-refresh" /></svg
+              ><span>Обновить</span>
+            </button>
+          </div>
+          <div class="error-banner" id="error-banner" role="alert" hidden></div>
+          <div class="capital">
+            <div>
+              <div class="section-label">
+                Стоимость портфеля
+                <span
+                  class="hint"
+                  title="Свободные средства плюс оценка открытых позиций"
+                  >i</span
+                >
+              </div>
+              <div class="equity" id="equity">—</div>
+              <div class="pnl-line">
+                <span id="pnl-badge" class="badge neutral">—</span
+                ><span>от начальных $1 000</span>
+              </div>
+            </div>
+            <div class="mini-stat">
+              <div class="section-label">Открытый P&amp;L</div>
+              <div class="value" id="unrealized">—</div>
+              <div class="small" id="valuation-label">Проверяем оценку</div>
+            </div>
+          </div>
+          <div
+            class="capital-allocation"
+            role="img"
+            id="allocation-bar"
+            aria-label="Распределение капитала"
+          >
+            <span class="cash-segment" id="cash-segment"></span
+            ><span class="open-segment" id="open-segment"></span>
+          </div>
+          <div class="allocation-labels">
+            <span
+              ><i class="key"></i>Свободные средства
+              <b id="cash-share">—</b></span
+            ><span
+              ><i class="key open"></i>В позициях <b id="open-share">—</b></span
+            >
+          </div>
+          <p class="sync-note" id="sync-note">
+            Читаем state.json · автообновление каждые 10 секунд
+          </p>
+          <div class="kpis">
+            <article class="kpi">
+              <div class="kpi-top">
+                Свободные средства
+                <svg class="icon" aria-hidden="true">
+                  <use href="#i-wallet" />
+                </svg>
+              </div>
+              <div class="kpi-value" id="cash">—</div>
+              <div class="kpi-note">Для виртуальных сделок</div>
+            </article>
+            <article class="kpi">
+              <div class="kpi-top">
+                Открытые позиции
+                <svg class="icon" aria-hidden="true">
+                  <use href="#i-positions" />
+                </svg>
+              </div>
+              <div class="kpi-value" id="position-count">—</div>
+              <div class="kpi-note">
+                Оценка: <strong id="open-value">—</strong>
+              </div>
+            </article>
+            <article class="kpi">
+              <div class="kpi-top">
+                Скопировано сделок
+                <svg class="icon" aria-hidden="true">
+                  <use href="#i-copy" />
+                </svg>
+              </div>
+              <div class="kpi-value" id="copied">—</div>
+              <div class="kpi-note">
+                Пропущено: <strong id="skipped">—</strong>
+              </div>
+            </article>
+          </div>
+        </section>
+        <div class="middle-grid">
+          <section class="card" aria-labelledby="chart-title">
+            <div class="card-heading">
+              <h2 id="chart-title">Ритм эксперимента</h2>
+              <svg class="icon" aria-hidden="true"><use href="#i-chart" /></svg>
+            </div>
+            <div class="subtle">Сигналы за семь дней</div>
+            <div class="chart-summary">
+              <strong id="chart-total">—</strong
+              ><span>сохранённых сигналов</span>
+            </div>
+            <div class="chart-legend">
+              <span><i class="key copied"></i>Скопировано</span
+              ><span><i class="key skipped"></i>Пропущено</span>
+            </div>
+            <div
+              class="chart"
+              id="activity-chart"
+              aria-label="Сохранённые сигналы по дням эксперимента"
+            ></div>
+            <div class="chart-note" id="chart-note">
+              График по журналу state.json; история стоимости не сохраняется.
+            </div>
+          </section>
+          <section
+            class="card position-card"
+            id="positions"
+            aria-labelledby="positions-title"
+          >
+            <div class="card-heading">
+              <h2 id="positions-title">В фокусе</h2>
+              <span class="subtle" id="position-caption">Открытые позиции</span>
+            </div>
+            <div id="position-content">
+              <div class="empty">Загружаем позиции…</div>
+            </div>
+          </section>
+        </div>
+        <section
+          class="activity"
+          id="activity"
+          aria-labelledby="activity-title"
+        >
+          <div class="section-heading">
+            <h2 id="activity-title">
+              Последняя активность <span class="count" id="event-count">—</span>
+            </h2>
+            <span class="subtle">Время · МСК</span>
+          </div>
+          <div class="activity-controls">
+            <div class="filters" role="group" aria-label="Фильтр сделок">
+              <button type="button" data-filter="all" aria-pressed="true">
+                Все сделки</button
+              ><button type="button" data-filter="COPIED" aria-pressed="false">
+                Скопировано</button
+              ><button type="button" data-filter="SKIPPED" aria-pressed="false">
+                Пропущено
+              </button>
+            </div>
+            <label class="search"
+              ><svg class="icon" aria-hidden="true">
+                <use href="#i-search" /></svg
+              ><span class="sr-only">Поиск по рынку или исходу</span
+              ><input
+                id="search"
+                type="search"
+                placeholder="Найти событие"
+                autocomplete="off"
+            /></label>
+          </div>
+          <div class="activity-list" id="activity-list">
+            <div class="empty">Загружаем журнал сделок…</div>
+          </div>
+          <button class="load-more" id="load-more" type="button" hidden>
+            Показать ещё
+            <svg class="icon" aria-hidden="true"><use href="#i-chevron" /></svg>
+          </button>
+        </section>
+        <details class="settlements" id="settlements">
+          <summary>
+            <span
+              >Завершённые события
+              <span class="subtle" id="settlement-count">—</span></span
+            ><svg class="icon" aria-hidden="true">
+              <use href="#i-chevron" />
+            </svg>
+          </summary>
+          <div id="settlement-list"></div>
+        </details>
+        <footer class="main-footer">
+          <p>
+            Виртуальный счёт · без реальных заявок. Результаты симуляции не
+            гарантируют будущую доходность. Котировки могут поступать с
+            задержкой.
+          </p>
+          <a
+            href="https://github.com/dgorshenin555-commits/c63amg-tracker/actions"
+            target="_blank"
+            rel="noopener noreferrer"
+            >Журнал запусков ↗</a
+          >
+        </footer>
+      </main>
+      <aside class="insight" id="experiment" aria-labelledby="experiment-title">
+        <div class="insight-top">
+          <div class="insight-brand">
+            <span>C63AMG EXPERIMENT</span><span class="tag">PAPER ONLY</span>
+          </div>
+          <h2 id="experiment-title">
+            Семь дней.<br />
+            Один эксперимент.
+          </h2>
+          <p class="insight-description">
+            Наблюдаем за публичными сделками.<br />Проверяем стратегию на
+            виртуальном счёте.
+          </p>
+          <div class="period-hero">
+            <div>
+              <div class="period-label" id="period-label">
+                День эксперимента
+              </div>
+              <div class="period-value">
+                <b id="experiment-day" style="font-weight: 350">—</b
+                ><span> / 7 дней</span>
+              </div>
+            </div>
+            <div class="period-ring">
+              <svg viewBox="0 0 80 80" aria-hidden="true">
+                <circle cx="40" cy="40" r="34" />
+                <circle
+                  class="ring-value"
+                  id="progress-ring"
+                  cx="40"
+                  cy="40"
+                  r="34"
+                /></svg
+              ><span class="ring-number" id="progress-percent">—</span>
+            </div>
+          </div>
+          <div class="period-dates">
+            <span id="start-date">Начало —</span
+            ><span id="end-date">Финиш —</span>
+          </div>
+          <div
+            class="period-track"
+            id="progress"
+            role="progressbar"
+            aria-label="Прогресс эксперимента"
+            aria-valuemin="0"
+            aria-valuemax="100"
+            aria-valuenow="0"
+          >
+            <div class="period-fill" id="progress-fill"></div>
+          </div>
+          <p class="period-caption" id="period-caption">
+            Даты из состояния виртуального счёта
+          </p>
+        </div>
+        <div class="insight-tabs" role="tablist" aria-label="Об эксперименте">
+          <button
+            class="insight-tab"
+            id="tab-timeline"
+            role="tab"
+            type="button"
+            aria-selected="true"
+            aria-controls="panel-timeline"
+            tabindex="0"
+          >
+            Ход эксперимента</button
+          ><button
+            class="insight-tab"
+            id="tab-details"
+            role="tab"
+            type="button"
+            aria-selected="false"
+            aria-controls="panel-details"
+            tabindex="-1"
+          >
+            Детали счёта
+          </button>
+        </div>
+        <div
+          class="glass-section"
+          id="panel-timeline"
+          role="tabpanel"
+          aria-labelledby="tab-timeline"
+        >
+          <h3 class="glass-heading" id="calendar-title">Семидневный период</h3>
+          <p class="glass-subtitle">Семь периодов по 24 часа от начала теста.</p>
+          <div class="calendar" id="calendar"></div>
+          <div class="day-legend">
+            <span><i></i>Прошёл</span><span><i class="now"></i>Текущий</span
+            ><span><i class="future"></i>Впереди</span>
+          </div>
+          <div class="glass-metric-row">
+            <span>Начальный баланс</span><b>$1 000.00</b>
+          </div>
+          <div class="glass-metric-row">
+            <span>Результат портфеля</span><b id="experiment-result">—</b>
+          </div>
+          <div class="glass-metric-row">
+            <span>Статус источника</span><b id="feed-status">Проверяем</b>
+          </div>
+          <p class="glass-warning" id="freshness-note">
+            Проверяем время последнего обновления источника.
+          </p>
+        </div>
+        <div
+          class="glass-section"
+          id="panel-details"
+          role="tabpanel"
+          aria-labelledby="tab-details"
+          hidden
+        >
+          <h3 class="glass-heading">Виртуальный счёт</h3>
+          <p class="glass-subtitle">Фактические значения из state.json.</p>
+          <dl class="glass-details">
+            <dt>Реализованный результат</dt>
+            <dd id="realized">—</dd>
+            <dt>Оценка открытых позиций</dt>
+            <dd id="detail-open">—</dd>
+            <dt>Себестоимость позиций</dt>
+            <dd id="detail-cost">—</dd>
+            <dt>Последняя оценка · МСК</dt>
+            <dd class="small-text" id="valuation-time">—</dd>
+            <dt>Качество данных</dt>
+            <dd class="small-text" id="data-quality">—</dd>
+          </dl>
+        </div>
+        <div class="insight-footer">
+          <a
+            class="source-link"
+            href="https://polymarket.com/ru/@c63amg"
+            target="_blank"
+            rel="noopener noreferrer"
+            >Профиль трейдера
+            <svg class="icon" aria-hidden="true">
+              <use href="#i-arrow" /></svg></a
+          ><a
+            class="data-link"
+            href="state.json"
+            target="_blank"
+            rel="noopener"
+            aria-label="Открыть исходный state.json"
+            title="Исходный state.json"
+            ><svg class="icon" aria-hidden="true">
+              <use href="#i-download" /></svg
+          ></a>
+        </div>
+      </aside>
+    </div>
+    <noscript
+      ><p style="padding: 24px">
+        Для загрузки данных панели включите JavaScript.
+        <a href="state.json">Открыть state.json</a>
+      </p></noscript
+    >
+  </body>
 </html>
