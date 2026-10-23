@@ -1,77 +1,46 @@
-name: C63AMG Paper Tracker
+name: C63AMG Dashboard Archive
 on:
   push:
     branches: [main]
     paths:
       - '.github/workflows/paper-tracker.yml'
-      - 'monitor.py'
-      - 'notify_telegram.py'
-      - 'site/index.html'
-      - 'site/dashboard/index.html'
-  schedule:
-    - cron: "4-59/5 * * * *"
+      - 'site/**'
   workflow_dispatch:
-    inputs:
-      telegram_action:
-        description: 'Telegram setup: none, discover chat, or send test alert'
-        type: choice
-        default: none
-        options:
-          - none
-          - discover
-          - test
 permissions:
-  contents: write
+  contents: read
   pages: write
   id-token: write
 concurrency:
-  group: c63amg-paper
+  group: c63amg-static-pages
   cancel-in-progress: false
 jobs:
-  tracker:
+  publish:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.11"
-      - name: Verify paper portfolio settlement rules
-        run: python -m unittest -q test_valuation.py test_telegram.py test_server_runner.py test_monitor_vps.py
-      - name: Collect and simulate
-        run: python monitor.py
-      - name: Save virtual account
+      - name: Prepare archived dashboard snapshot
         run: |
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git config user.name "github-actions[bot]"
-          git add state.json
-          if ! git diff --cached --quiet; then
-            git commit -m "Paper-trading snapshot [skip ci]"
-            git push
-          fi
-      - name: Notify about new simulated trades in Telegram
-        continue-on-error: true
-        env:
-          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-          TELEGRAM_NOTIFY_MODE: ${{ vars.TELEGRAM_NOTIFY_MODE || 'all' }}
-        run: python notify_telegram.py
-      - name: Discover Telegram chat ID
-        if: github.event_name == 'workflow_dispatch' && inputs.telegram_action == 'discover'
-        env:
-          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-        run: python notify_telegram.py --discover
-      - name: Send Telegram test notification
-        if: github.event_name == 'workflow_dispatch' && inputs.telegram_action == 'test'
-        env:
-          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-        run: python notify_telegram.py --test
+          cp state.json site/state.json
+          python3 - <<'PY'
+          from pathlib import Path
+          import html
+          notice = (
+              '<aside role="status" style="background:#fff2d9;color:#764a13;'
+              'font:600 13px/1.5 system-ui;padding:13px 18px;text-align:center;'
+              'border-bottom:1px solid #efdbb3;">'
+              'АРХИВНАЯ ПАНЕЛЬ GITHUB · Эти цифры больше не обновляются. '
+              'Актуальный виртуальный счёт работает на Vultr VPS.'
+              '</aside>'
+          )
+          for name in ('site/index.html', 'site/dashboard/index.html'):
+              path = Path(name)
+              content = path.read_text()
+              if '<body>' in content and 'АРХИВНАЯ ПАНЕЛЬ GITHUB' not in content:
+                  path.write_text(content.replace('<body>', '<body>' + notice, 1))
+          PY
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
           path: site
       - uses: actions/deploy-pages@v4
-        id: deployment
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
