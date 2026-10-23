@@ -116,7 +116,7 @@ def run():
   s["source_24h_sample_count"]=len(sample)
   s["source_latest_known_ts"]=max((int(v.get("timestamp") or 0) for v in sample),default=0)
   s["source_latest_markets"]=[str(v.get("title") or "")[:80] for v in sample[:3]]
- print("v2 source recent rows:",len(rows),"recent latest:",s["feed_latest_ts"],"24h sample:",len(sample),"sample latest:",s["source_latest_known_ts"])
+ print("v2 source recent rows:",len(rows),"recent latest:",s["feed_latest_ts"],"24h sample:",s.get("source_24h_sample_count",0),"sample latest:",s.get("source_latest_known_ts",0),"scan mode:",s["scan_mode"])
  for t in rows:
   k=key(t)
   # Trades before our paper experiment began are history, not new signals.
