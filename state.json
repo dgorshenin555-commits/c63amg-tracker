@@ -1,7 +1,7 @@
 {
   "started": 1792679836,
   "end": 1793284636,
-  "updated": 1792736931,
+  "updated": 1792740623,
   "cash": 950.0,
   "realized": 0.0,
   "positions": {
@@ -14,7 +14,7 @@
       "mark_value": 48.92176431450824,
       "mark_price": 0.5,
       "mark_source": "best_bid",
-      "mark_updated_at": 1792736931
+      "mark_updated_at": 1792740623
     }
   },
   "seen": [
@@ -542,7 +542,11 @@
     "cfbe2e2390504c9a97e3438228371c7314354dd23d3c3d399104eb38bcafbc35",
     "f978362d002f4466daa3c4bd79b785fc0bf291f691f44d724609f0f526fcf398",
     "ab2002f7aabee6e877a5f07877a8f1c6341ecd4d299dccae094fa6777b1edbaa",
-    "3745dc5a875aa21f6cbbd52b6e5ca648269d2622ccf6f90ef548e6463d65a353"
+    "3745dc5a875aa21f6cbbd52b6e5ca648269d2622ccf6f90ef548e6463d65a353",
+    "30b70384856f3d766a0edb776df43f003dc3152b31b195fe64675ef14ad3579f",
+    "7ed76a9460e012611c1fcfcb2f5db40a560d4e0a947ca7b3721f207c28d22917",
+    "876dd777343f1dee7f4a6d60b4e2641d3502520104ff25c7878ee608d2903f6c",
+    "460b4354233d4c1c44cdcabbead9b6b641328df488248b5dd414b0c6d6bc3d58"
   ],
   "events": [
     {
@@ -809,24 +813,64 @@
       "price": 0.5,
       "decision": "SKIPPED",
       "reason": "late_or_invalid"
+    },
+    {
+      "ts": 1792738502,
+      "detected": 1792740623,
+      "side": "BUY",
+      "market": "Almaty Open: Nikoloz Basilashvili vs Adrian Mannarino",
+      "outcome": "Nikoloz Basilashvili",
+      "price": 0.42,
+      "decision": "SKIPPED",
+      "reason": "late_or_invalid"
+    },
+    {
+      "ts": 1792738530,
+      "detected": 1792740623,
+      "side": "BUY",
+      "market": "Almaty Open: Nikoloz Basilashvili vs Adrian Mannarino",
+      "outcome": "Nikoloz Basilashvili",
+      "price": 0.44,
+      "decision": "SKIPPED",
+      "reason": "late_or_invalid"
+    },
+    {
+      "ts": 1792738580,
+      "detected": 1792740623,
+      "side": "BUY",
+      "market": "Almaty Open: Nikoloz Basilashvili vs Adrian Mannarino",
+      "outcome": "Nikoloz Basilashvili",
+      "price": 0.43,
+      "decision": "SKIPPED",
+      "reason": "late_or_invalid"
+    },
+    {
+      "ts": 1792738992,
+      "detected": 1792740623,
+      "side": "BUY",
+      "market": "Almaty Open: Nikoloz Basilashvili vs Adrian Mannarino",
+      "outcome": "Nikoloz Basilashvili",
+      "price": 0.48,
+      "decision": "SKIPPED",
+      "reason": "late_or_invalid"
     }
   ],
   "copied": 5,
-  "skipped": 20,
+  "skipped": 24,
   "feed_version": "v2_activity",
-  "feed_rows": 0,
-  "feed_latest_ts": 0,
+  "feed_rows": 4,
+  "feed_latest_ts": 1792738992,
   "source_24h_sample_count": 10,
-  "source_latest_known_ts": 1792700369,
+  "source_latest_known_ts": 1792738992,
   "source_latest_markets": [
-    "UFC 333: Alexander Volkanovski vs. Movsar Evloev (Featherweight, Main Card)",
-    "UFC 333: Alexander Volkanovski vs. Movsar Evloev (Featherweight, Main Card)",
-    "UFC 333: Alexander Volkanovski vs. Movsar Evloev (Featherweight, Main Card)"
+    "Almaty Open: Nikoloz Basilashvili vs Adrian Mannarino",
+    "Almaty Open: Nikoloz Basilashvili vs Adrian Mannarino",
+    "Almaty Open: Nikoloz Basilashvili vs Adrian Mannarino"
   ],
-  "poll_from_ts": 1792712527,
-  "polling_gap_s": 17204,
+  "poll_from_ts": 1792719023,
+  "polling_gap_s": 3692,
   "feed_status": "live",
-  "new_detected": 0,
+  "new_detected": 4,
   "settlements": [],
   "unrealized": -1.0782356854917552,
   "open_cost": 49.99999999999999,
@@ -838,7 +882,7 @@
   "settled_wins": 0,
   "settled_losses": 0,
   "settled_splits": 0,
-  "valuation_at": 1792736931,
+  "valuation_at": 1792740623,
   "valuation_status": "quoted",
   "valuation_unquoted": 0,
   "valuation_errors": [],
